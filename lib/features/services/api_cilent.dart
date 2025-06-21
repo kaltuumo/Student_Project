@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
 import 'package:student_project/features/auth/screens/admin/login_admin.dart';
+import 'package:student_project/features/pages/models/student_model.dart';
 import 'package:student_project/utils/constant/api_constant.dart';
 
 class ApiClient {
@@ -101,6 +102,43 @@ class ApiClient {
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong');
       return null;
+    }
+  }
+
+  //Create Student
+
+  static Future<bool> createStudent(StudentModel post) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      Get.snackbar('Error', 'User not logged in');
+      return false;
+    }
+
+    final url = Uri.parse('${ApiConstants.studentEndpoint}/create-student');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(post.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        final responseBody = jsonDecode(response.body);
+        String error = responseBody['message'] ?? 'Failed to create Student';
+        Get.snackbar('Error', error);
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Something went wrong');
+      return false;
     }
   }
 

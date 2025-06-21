@@ -5,10 +5,17 @@ import 'package:student_project/utils/constant/sizes.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final VoidCallback? onBack;
+  final List<Widget>? actions;
+  final bool showMenu;
+  final VoidCallback? onMenuTap;
 
-  const CustomAppbar({Key? key, required this.title, this.onBack})
-    : super(key: key);
+  const CustomAppbar({
+    super.key,
+    required this.title,
+    this.actions,
+    this.showMenu = false,
+    this.onMenuTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,28 +24,26 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: const TextStyle(
           fontSize: AppSizes.xl,
-          // fontWeight: FontWeight.bold,
           color: AppColors.blackColor,
         ),
       ),
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: AppColors.blackColor),
-        onPressed: onBack ?? () => Get.back(),
-      ),
+      leading:
+          showMenu
+              ? IconButton(
+                icon: const Icon(Icons.menu, color: AppColors.blackColor),
+                onPressed: onMenuTap ?? () => Scaffold.of(context).openDrawer(),
+              )
+              : IconButton(
+                icon: const Icon(Icons.arrow_back, color: AppColors.blackColor),
+                onPressed: () => Get.back(),
+              ),
+      actions: actions,
       backgroundColor: AppColors.whiteColor,
-      elevation: 0,
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1),
-        child: Divider(
-          color: AppColors.blackColor.withOpacity(0.5),
-          thickness: 1,
-          height: 1,
-        ),
-      ),
+      elevation: 0, // No shadow (no divider)
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 1);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

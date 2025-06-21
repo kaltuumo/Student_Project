@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_project/features/auth/controllers/auth_controller.dart';
-import 'package:student_project/features/pages/admin/widget/profile_widget.dart';
+import 'package:student_project/features/pages/screens/admin/widget/profile_widget.dart';
 import 'package:student_project/features/services/api_cilent.dart';
 import 'package:student_project/shared/widgets/custom_appbar.dart';
 import 'package:student_project/utils/constant/colors.dart';

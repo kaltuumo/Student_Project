@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // If using GetX for state management
-import 'package:student_project/features/pages/admin/add_admin.dart';
-import 'package:student_project/features/pages/admin/admin_profile.dart';
-import 'package:student_project/features/pages/student/add_student.dart';
+import 'package:student_project/features/pages/screens/admin/add_admin.dart';
+import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
+import 'package:student_project/features/pages/screens/student/add_student.dart';
+import 'package:student_project/features/pages/screens/student/get_student.dart';
 import 'package:student_project/utils/constant/colors.dart';
 
 // AppColors for light/dark mode
@@ -33,6 +34,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
       appBar: AppBar(
         title: const Text('Dashboard'),
         actions: [
@@ -57,7 +60,7 @@ class _DashboardState extends State<Dashboard> {
               title: const Text('Add Student'),
               leading: const Icon(Icons.person_add),
               onTap: () {
-                Get.to(() => const AddStudentPage());
+                Get.to(() => AddStudent());
                 // Navigate to Add Student Screen
               },
             ),
@@ -65,7 +68,7 @@ class _DashboardState extends State<Dashboard> {
               title: const Text('All Students'),
               leading: const Icon(Icons.list),
               onTap: () {
-                // Navigate to All Students Screen
+                Get.to(() => GetStudent());
               },
             ),
             Divider(
