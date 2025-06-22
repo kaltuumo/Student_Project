@@ -1,25 +1,44 @@
 class StudentModel {
   final String? id;
   final String fullname;
-  final String required;
   final String gender;
-  final String paid;
-  final String remaining;
+  final int required;
+  final int paid;
+  final int? remaining;
   final String phone;
-  final String? createdAt;
-  final String? updatedAt;
+  final String? createdDate;
+  final String? createdTime;
+  final String? updateDate;
+  final String? updateTime;
 
+  // ✅ Constructor for reading full student info from backend
   StudentModel({
     this.id,
     required this.fullname,
+    required this.gender,
     required this.required,
     required this.paid,
-    required this.remaining,
-    required this.gender,
+    this.remaining,
     required this.phone,
-    this.createdAt,
-    this.updatedAt,
+    this.createdDate,
+    this.createdTime,
+    this.updateDate,
+    this.updateTime,
   });
+
+  // ✅ Used only when sending new student to API
+  StudentModel.create({
+    required this.fullname,
+    required this.gender,
+    required this.required,
+    required this.paid,
+    required this.phone,
+  }) : id = null,
+       remaining = null,
+       createdDate = null,
+       createdTime = null,
+       updateDate = null,
+       updateTime = null;
 
   factory StudentModel.fromJson(Map<String, dynamic> json) {
     return StudentModel(
@@ -30,8 +49,10 @@ class StudentModel {
       paid: json['paid'],
       remaining: json['remaining'],
       phone: json['phone'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
+      createdDate: json['createdDate'],
+      createdTime: json['createdTime'],
+      updateDate: json['updateDate'],
+      updateTime: json['updateTime'],
     );
   }
 
@@ -41,7 +62,6 @@ class StudentModel {
       'gender': gender,
       'required': required,
       'paid': paid,
-      'remaining': remaining,
       'phone': phone,
     };
   }

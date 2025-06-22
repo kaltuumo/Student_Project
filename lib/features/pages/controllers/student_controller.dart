@@ -8,7 +8,6 @@ class StudentController extends GetxController {
   final genderController = TextEditingController();
   final requiredController = TextEditingController();
   final paidController = TextEditingController();
-  final remainingController = TextEditingController();
   final phoneController = TextEditingController();
   final RxString selectedGender = ''.obs; // ✅ Used by radio buttons
 
@@ -16,12 +15,13 @@ class StudentController extends GetxController {
   final StudentRepositories _postRepository = StudentRepositories();
 
   final isLoading = false.obs;
-  final isPostCreated = false.obs;
+  final isStudentCreated = false.obs;
 
-  //   @override
-  // void onInit() {
-  //   fetchAllPosts(); // Call once
-  //   super.onInit();
+  @override
+  void onInit() {
+    fetchAllStudents(); // Call once
+    super.onInit();
+  }
 
   Future<void> createStudent() async {
     if (fullnameController.text.isEmpty ||
@@ -29,7 +29,6 @@ class StudentController extends GetxController {
         (selectedGender.value != 'Male' && selectedGender.value != 'Female') ||
         requiredController.text.isEmpty ||
         paidController.text.isEmpty ||
-        remainingController.text.isEmpty ||
         phoneController.text.isEmpty) {
       Get.snackbar(
         'Foomka Khaldan',
@@ -44,9 +43,10 @@ class StudentController extends GetxController {
       final post = StudentModel(
         fullname: fullnameController.text.trim(),
         gender: selectedGender.value.trim(),
-        required: requiredController.text.trim(),
-        paid: paidController.text.trim(),
-        remaining: remainingController.text.trim(),
+        required: int.parse(
+          requiredController.text.trim(),
+        ), // ✅ Convert string to int
+        paid: int.parse(paidController.text.trim()), // ✅ Convert string to int
         phone: phoneController.text.trim(),
       );
 
@@ -57,17 +57,30 @@ class StudentController extends GetxController {
         genderController.clear();
         requiredController.clear();
         paidController.clear();
-        remainingController.clear();
         phoneController.clear();
         selectedGender.value = ''; //
         Get.snackbar('Success', 'Student created');
-        isPostCreated(true);
-        // await fetchAllPosts();
+        isStudentCreated(true);
+        await fetchAllStudents();
       } else {
-        Get.snackbar('Error', 'Post creation failed');
+        Get.snackbar('Error', 'Student creation failed');
       }
     } catch (e) {
       Get.snackbar('Error', 'Error occurred: $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  // Fetch all Students
+
+  Future<void> fetchAllStudents() async {
+    try {
+      isLoading(true);
+      final data = await _postRepository.fetchStudents();
+      posts.assignAll(data);
+    } catch (e) {
+      Get.snackbar("Error", 'Fetch failed: $e');
     } finally {
       isLoading(false);
     }

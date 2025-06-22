@@ -9,22 +9,18 @@ import 'package:student_project/features/pages/models/student_model.dart';
 import 'package:student_project/utils/constant/api_constant.dart';
 
 class ApiClient {
-  // Method to format date
   static String formatDate(String dateString) {
     final dateTime = DateTime.parse(dateString);
-    return DateFormat('yyyy-MM-dd').format(dateTime);
+    return DateFormat('d MMMM yyyy').format(dateTime);
   }
 
-  // Tusaale isticmaalkiisa:
   static void exampleUsage() {
     String formattedCreatedAt = formatDate("2025-06-12T16:13:19.923Z");
     String formattedUpdatedAt = formatDate("2025-06-12T16:14:18.577Z");
 
-    print('Formatted CreatedAt: $formattedCreatedAt');
-    print('Formatted UpdatedAt: $formattedUpdatedAt');
+    print('Formatted CreatedAt: $formattedCreatedAt'); // 12 June 2025
+    print('Formatted UpdatedAt: $formattedUpdatedAt'); // 12 June 2025
   }
-
-  // ... (rest of your code remains unchanged)
 
   static Future<bool> signup({
     required String fullname,
@@ -146,6 +142,43 @@ class ApiClient {
     final url = Uri.parse(
       ApiConstants.profileAdminEndpoint,
     ); // Use the new endpoint
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    return response;
+  }
+
+  // GET ALL STUDENTS
+
+  static Future<List<dynamic>> getStudents() async {
+    final url = Uri.parse('${ApiConstants.studentEndpoint}/all-students');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final jsonBody = jsonDecode(response.body);
+
+        List students = jsonBody['data'];
+        // print("RESPONSE DATA: $jsonBody");
+
+        return students;
+      } else {
+        throw Exception('Failed to load Students');
+      }
+    } catch (e) {
+      throw Exception('Failed to load Students: $e');
+    }
+  }
+
+  static Future<http.Response> getAllStudents(String token) async {
+    final url = Uri.parse('${ApiConstants.studentEndpoint}/all-students');
 
     final response = await http.get(
       url,

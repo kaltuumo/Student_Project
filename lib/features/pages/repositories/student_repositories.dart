@@ -5,4 +5,13 @@ class StudentRepositories {
   Future<bool> createStudent(StudentModel post) {
     return ApiClient.createStudent(post);
   }
+
+  Future<List<StudentModel>> fetchStudents() async {
+    final postsData = await ApiClient.getStudents(); // API call
+    print("✅ JSON DATA: $postsData"); // Ku dar tan si aad u hubiso xogta
+
+    return postsData
+        .map<StudentModel>((json) => StudentModel.fromJson(json))
+        .toList();
+  }
 }

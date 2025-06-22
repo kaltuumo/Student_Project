@@ -18,7 +18,10 @@ class ProfileWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color:
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey[800]
+                : Colors.grey[200],
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(

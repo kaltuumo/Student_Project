@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
 import 'package:student_project/features/pages/screens/student/add_student.dart';
@@ -13,6 +14,7 @@ class GetStudent extends StatefulWidget {
 
 class _GetStudentState extends State<GetStudent> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final StudentController studentController = Get.put(StudentController());
 
   bool isDarkMode = false;
 
@@ -20,7 +22,6 @@ class _GetStudentState extends State<GetStudent> {
     setState(() {
       isDarkMode = !isDarkMode;
     });
-    // Update the theme (if using GetX or another state manager, use that to change the theme)
     if (isDarkMode) {
       Get.changeTheme(ThemeData.dark());
     } else {
@@ -31,9 +32,8 @@ class _GetStudentState extends State<GetStudent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
       key: _scaffoldKey,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('All Students'),
         actions: [
@@ -57,23 +57,14 @@ class _GetStudentState extends State<GetStudent> {
             ListTile(
               title: const Text('Add Student'),
               leading: const Icon(Icons.person_add),
-              onTap: () {
-                Get.to(() => AddStudent());
-              },
+              onTap: () => Get.to(() => AddStudent()),
             ),
             ListTile(
               title: const Text('All Students'),
               leading: const Icon(Icons.list),
-              onTap: () {
-                Get.to(() => GetStudent());
-              },
+              onTap: () => Get.to(() => const GetStudent()),
             ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
-            ),
+            Divider(thickness: 1, indent: 16, endIndent: 16),
             ListTile(
               title: const Text('Student Report'),
               leading: const Icon(Icons.report),
@@ -84,12 +75,7 @@ class _GetStudentState extends State<GetStudent> {
               leading: const Icon(Icons.access_time),
               onTap: () {},
             ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
-            ),
+            Divider(thickness: 1, indent: 16, endIndent: 16),
             ListTile(
               title: const Text('Attendance Report'),
               leading: const Icon(Icons.picture_as_pdf),
@@ -98,22 +84,13 @@ class _GetStudentState extends State<GetStudent> {
             ListTile(
               title: const Text('Admin Profile'),
               leading: const Icon(Icons.account_circle),
-              onTap: () {
-                Get.to(() => AdminProfile());
-              },
+              onTap: () => Get.to(() => AdminProfile()),
             ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
-            ),
+            Divider(thickness: 1, indent: 16, endIndent: 16),
             ListTile(
               title: const Text('Add New Admin'),
               leading: const Icon(Icons.admin_panel_settings),
-              onTap: () {
-                Get.to(() => AddAdmin());
-              },
+              onTap: () => Get.to(() => AddAdmin()),
             ),
             ListTile(
               title: const Text('Manage Class Time'),
@@ -124,54 +101,235 @@ class _GetStudentState extends State<GetStudent> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            GestureDetector(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 15,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey[800]
-                          : Colors.white,
-                  borderRadius: BorderRadius.circular(90),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Search by Name or Phone.',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 24),
+            // Search Box (optional)
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
                 color:
                     Theme.of(context).brightness == Brightness.dark
                         ? Colors.grey[800]
-                        : Colors.white,
-                borderRadius: BorderRadius.circular(10), // Kaliya radius
+                        : Colors.grey[200],
+                borderRadius: BorderRadius.circular(30),
               ),
-              child: Text(
-                'List of all students will be displayed here.',
-                style: Theme.of(context).textTheme.bodyLarge,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.search,
+                    color:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(child: Text('Search by name or phone...')),
+                ],
               ),
+            ),
+            const SizedBox(height: 20),
+
+            // Student List
+            Expanded(
+              child: Obx(() {
+                if (studentController.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (studentController.posts.isEmpty) {
+                  return const Center(child: Text('No students found.'));
+                }
+
+                return ListView.builder(
+                  itemCount: studentController.posts.length,
+                  itemBuilder: (context, index) {
+                    final student = studentController.posts[index];
+                    return Card(
+                      elevation: 2,
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      child: ListTile(
+                        title: Text(
+                          student.fullname,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text("Registered: ${student.createdDate}"),
+                                Spacer(),
+                                PopupMenuButton<String>(
+                                  onSelected: (value) {
+                                    if (value == 'update') {
+                                      // Halkan ku samee update action
+                                      print('Update student');
+                                    } else if (value == 'delete') {
+                                      // Halkan ku samee delete action
+                                      print('Delete student');
+                                    }
+                                  },
+                                  itemBuilder:
+                                      (BuildContext context) => [
+                                        const PopupMenuItem(
+                                          value: 'update',
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.edit,
+                                                color: Colors.blue,
+                                              ), // Icon for Update
+                                              SizedBox(
+                                                width: 8,
+                                              ), // Space between icon and text
+                                              Text('Update'),
+                                            ],
+                                          ),
+                                        ),
+                                        const PopupMenuItem(
+                                          value: 'delete',
+
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ), // Icon for Update
+                                              SizedBox(
+                                                width: 8,
+                                              ), // Space between icon and text
+                                              Text('Delete'),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                  icon: const Icon(Icons.more_vert),
+                                ),
+                              ],
+                            ),
+                            Divider(thickness: 2, indent: 1, endIndent: 1),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  width: 130,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      100,
+                                      141,
+                                      101,
+                                    ).withOpacity(0.5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.phone, size: 20),
+                                      SizedBox(width: 10),
+                                      Text("${student.phone}"),
+                                    ],
+                                  ),
+                                ),
+
+                                SizedBox(width: 10),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      100,
+                                      141,
+                                      101,
+                                    ).withOpacity(0.5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.person, size: 20),
+                                      SizedBox(width: 10),
+                                      Text("${student.gender}"),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      100,
+                                      141,
+                                      101,
+                                    ).withOpacity(0.5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.access_time, size: 20),
+                                      SizedBox(width: 10),
+                                      Text("${student.createdTime}"),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  width: 125,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      100,
+                                      141,
+                                      101,
+                                    ).withOpacity(0.5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.date_range, size: 20),
+                                      SizedBox(width: 10),
+                                      Text("${student.createdDate}"),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Required: \$${student.required}"),
+                                Text("paid: \$${student.paid}"),
+                                Text("Remaining: \$${student.remaining}"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),

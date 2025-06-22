@@ -184,13 +184,6 @@ class _AddStudentState extends State<AddStudent> {
           _buildTextField(studentController.paidController, 'Enter Paid'),
 
           const SizedBox(height: 24),
-          _buildLabel("Remaining"),
-          _buildTextField(
-            studentController.remainingController,
-            'Enter Remaining',
-          ),
-
-          const SizedBox(height: 24),
           _buildLabel("Phone"),
           _buildTextField(
             studentController.phoneController,
