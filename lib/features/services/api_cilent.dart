@@ -191,6 +191,45 @@ class ApiClient {
     return response;
   }
 
+  // DELETE STUDENT
+
+  static Future<bool> deletePost(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print('Sending token: $token');
+
+    if (token == null || token.isEmpty) {
+      Get.snackbar('Error', 'No token found');
+      return false;
+    }
+
+    final url = Uri.parse(
+      '${ApiConstants.studentEndpoint}/delete-student/$id',
+    ); // Correct URL with query string
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer $token', // Ensure token is being sent in the header
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Post deleted successfully');
+        return true;
+      } else {
+        print('Failed to delete post: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error deleting post: $e');
+      return false;
+    }
+  }
+
   static Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // Tirtir dhammaan xogta keydka

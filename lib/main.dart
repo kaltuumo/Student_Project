@@ -14,7 +14,7 @@ void main() async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('token');
-  print("🎯 Token at startup: $token"); // ✅ Moved inside build method
+  print("🎯 Token at startup: $token");
 
   runApp(MyApp(token: token));
 }

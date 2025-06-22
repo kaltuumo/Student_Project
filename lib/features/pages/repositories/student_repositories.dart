@@ -14,4 +14,9 @@ class StudentRepositories {
         .map<StudentModel>((json) => StudentModel.fromJson(json))
         .toList();
   }
+
+  // Delete a post by id
+  Future<bool> deleteStudent(String id) {
+    return ApiClient.deletePost(id);
+  }
 }

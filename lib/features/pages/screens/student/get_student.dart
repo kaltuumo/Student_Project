@@ -157,17 +157,18 @@ class _GetStudentState extends State<GetStudent> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Registered: ${student.createdDate}"),
-                                Spacer(),
                                 PopupMenuButton<String>(
                                   onSelected: (value) {
                                     if (value == 'update') {
                                       // Halkan ku samee update action
                                       print('Update student');
                                     } else if (value == 'delete') {
-                                      // Halkan ku samee delete action
-                                      print('Delete student');
+                                      _showDeleteConfirmationDialog(context);
+                                      studentController.selectedPostId =
+                                          student.id;
                                     }
                                   },
                                   itemBuilder:
@@ -217,7 +218,7 @@ class _GetStudentState extends State<GetStudent> {
                                     horizontal: 10,
                                     vertical: 5,
                                   ),
-                                  width: 130,
+                                  width: 140,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: const Color.fromARGB(
@@ -318,9 +319,44 @@ class _GetStudentState extends State<GetStudent> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Required: \$${student.required}"),
-                                Text("paid: \$${student.paid}"),
-                                Text("Remaining: \$${student.remaining}"),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Required"),
+                                    Text(
+                                      "\$${student.required}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Paid"),
+                                    Text(
+                                      "\$${student.paid}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Remaining"),
+                                    Text(
+                                      "\$${student.remaining}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ],
@@ -334,6 +370,33 @@ class _GetStudentState extends State<GetStudent> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure you want to delete this student?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cancel button
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close dialog
+                await studentController.deleteStudent(); // ✅ call delete
+                studentController.fetchAllStudents(); // optional: refresh list
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

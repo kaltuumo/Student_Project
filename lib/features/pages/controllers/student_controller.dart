@@ -16,11 +16,16 @@ class StudentController extends GetxController {
 
   final isLoading = false.obs;
   final isStudentCreated = false.obs;
+  String? selectedPostId; // For update operations
 
   @override
   void onInit() {
     fetchAllStudents(); // Call once
     super.onInit();
+  }
+
+  void setSelectedPostId(String id) {
+    selectedPostId = id;
   }
 
   Future<void> createStudent() async {
@@ -39,14 +44,14 @@ class StudentController extends GetxController {
 
     try {
       isLoading(true);
-
+      // Convert required and paid to double
+      double requiredAmount = double.parse(requiredController.text.trim());
+      double paidAmount = double.parse(paidController.text.trim());
       final post = StudentModel(
         fullname: fullnameController.text.trim(),
         gender: selectedGender.value.trim(),
-        required: int.parse(
-          requiredController.text.trim(),
-        ), // ✅ Convert string to int
-        paid: int.parse(paidController.text.trim()), // ✅ Convert string to int
+        required: requiredAmount, // ✅ Convert string to double
+        paid: paidAmount,
         phone: phoneController.text.trim(),
       );
 
@@ -72,12 +77,37 @@ class StudentController extends GetxController {
     }
   }
 
+  Future<void> deleteStudent() async {
+    if (selectedPostId == null) {
+      Get.snackbar('Error', 'No post selected');
+      return;
+    }
+
+    try {
+      isLoading(true);
+      bool success = await _postRepository.deleteStudent(selectedPostId!);
+
+      if (success) {
+        Get.snackbar('Deleted', 'Student deleted');
+        selectedPostId = null;
+        await fetchAllStudents();
+      } else {
+        Get.snackbar('Error', 'Delete failed');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Error: $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
   // Fetch all Students
 
   Future<void> fetchAllStudents() async {
     try {
       isLoading(true);
       final data = await _postRepository.fetchStudents();
+      print("Fetched students: $data"); // Debug line
       posts.assignAll(data);
     } catch (e) {
       Get.snackbar("Error", 'Fetch failed: $e');

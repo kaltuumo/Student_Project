@@ -2,9 +2,9 @@ class StudentModel {
   final String? id;
   final String fullname;
   final String gender;
-  final int required;
-  final int paid;
-  final int? remaining;
+  final double required;
+  final double paid;
+  final double? remaining;
   final String phone;
   final String? createdDate;
   final String? createdTime;
@@ -45,9 +45,12 @@ class StudentModel {
       id: json['_id'],
       fullname: json['fullname'],
       gender: json['gender'],
-      required: json['required'],
-      paid: json['paid'],
-      remaining: json['remaining'],
+      required: (json['required'] as num).toDouble(),
+      paid: (json['paid'] as num).toDouble(),
+      remaining:
+          json['remaining'] != null
+              ? (json['remaining'] as num).toDouble()
+              : null,
       phone: json['phone'],
       createdDate: json['createdDate'],
       createdTime: json['createdTime'],
