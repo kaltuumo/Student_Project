@@ -5,6 +5,7 @@ import 'package:student_project/features/pages/controllers/student_controller.da
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
 import 'package:student_project/features/pages/screens/student/get_student.dart';
+import 'package:student_project/utils/constant/colors.dart';
 import 'package:student_project/utils/constant/sizes.dart';
 
 class AddStudent extends StatefulWidget {
@@ -32,6 +33,9 @@ class _AddStudentState extends State<AddStudent> {
       Get.changeTheme(ThemeData.light());
     }
   }
+
+  // Dropdown values for Primary and Secondary
+  final List<String> _educationLevels = ['Primary', 'Secondary'];
 
   @override
   Widget build(BuildContext context) {
@@ -145,15 +149,6 @@ class _AddStudentState extends State<AddStudent> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         children: [
-          const Text(
-            'Create a Student',
-            style: TextStyle(
-              fontSize: AppSizes.xxl,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 24),
-
           _buildLabel("Full Name"),
           _buildTextField(
             studentController.fullnameController,
@@ -191,11 +186,28 @@ class _AddStudentState extends State<AddStudent> {
             keyboardType: TextInputType.phone,
           ),
 
-          const SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: studentController.createStudent,
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text("Create Student"),
+          const SizedBox(height: 24),
+          _buildLabel("Education Level"),
+          _buildDropdown(),
+
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            height: 46,
+            child: ElevatedButton(
+              onPressed: studentController.createStudent,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              child: const Text(
+                "Create Student",
+                style: TextStyle(color: AppColors.blackColor),
+              ),
+            ),
           ),
         ],
       ),
@@ -236,6 +248,38 @@ class _AddStudentState extends State<AddStudent> {
         ),
         Text(value, style: const TextStyle(fontSize: AppSizes.md)),
       ],
+    );
+  }
+
+  // Dropdown to select Education Level
+
+  Widget _buildDropdown() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Obx(
+        () => DropdownButton<String>(
+          value:
+              studentController.selectedEducation.value.isNotEmpty
+                  ? studentController.selectedEducation.value
+                  : null, // if the value is empty, keep it null
+          hint: const Text('Select Education Level'),
+          isExpanded: true,
+          onChanged: (String? newValue) {
+            studentController.selectedEducation.value = newValue!;
+          },
+          items:
+              _educationLevels.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+        ),
+      ),
     );
   }
 }

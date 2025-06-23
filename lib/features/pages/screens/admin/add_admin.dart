@@ -45,7 +45,7 @@ class _AddAdminState extends State<AddAdmin> {
 
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Add Admin '),
+        title: const Text('Add New Admin'),
         actions: [
           IconButton(
             icon: Icon(isDarkMode ? Icons.brightness_7 : Icons.brightness_4),
@@ -146,30 +146,14 @@ class _AddAdminState extends State<AddAdmin> {
           ],
         ),
       ),
+
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 90),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Image.asset(AppImages.appLogoFull, width: 170, height: 170),
-                SizedBox(height: 24),
-                const Text(
-                  'Create an account',
-                  style: TextStyle(
-                    fontSize: AppSizes.xxl,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Please sign up to continue',
-                  style: TextStyle(
-                    fontSize: AppSizes.xl,
-                    color: Colors.black54,
-                  ),
-                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -6,10 +6,12 @@ import 'package:student_project/features/pages/repositories/student_repositories
 class StudentController extends GetxController {
   final fullnameController = TextEditingController();
   final genderController = TextEditingController();
+  final educationController = TextEditingController();
   final requiredController = TextEditingController();
   final paidController = TextEditingController();
   final phoneController = TextEditingController();
   final RxString selectedGender = ''.obs; // ✅ Used by radio buttons
+  final RxString selectedEducation = ''.obs; // ✅ Used by radio buttons
 
   final RxList<StudentModel> posts = <StudentModel>[].obs;
   final StudentRepositories _postRepository = StudentRepositories();
@@ -32,6 +34,9 @@ class StudentController extends GetxController {
     if (fullnameController.text.isEmpty ||
         selectedGender.value.isEmpty ||
         (selectedGender.value != 'Male' && selectedGender.value != 'Female') ||
+        selectedEducation.value.isEmpty ||
+        (selectedEducation.value != 'Primary' &&
+            selectedEducation.value != 'Secondary') ||
         requiredController.text.isEmpty ||
         paidController.text.isEmpty ||
         phoneController.text.isEmpty) {
@@ -50,6 +55,7 @@ class StudentController extends GetxController {
       final post = StudentModel(
         fullname: fullnameController.text.trim(),
         gender: selectedGender.value.trim(),
+        education: selectedEducation.value.trim(),
         required: requiredAmount, // ✅ Convert string to double
         paid: paidAmount,
         phone: phoneController.text.trim(),
@@ -60,10 +66,12 @@ class StudentController extends GetxController {
       if (success) {
         fullnameController.clear();
         genderController.clear();
+        educationController.clear();
         requiredController.clear();
         paidController.clear();
         phoneController.clear();
         selectedGender.value = ''; //
+        selectedEducation.value = ''; // Reset selected education
         Get.snackbar('Success', 'Student created');
         isStudentCreated(true);
         await fetchAllStudents();
@@ -111,6 +119,60 @@ class StudentController extends GetxController {
       posts.assignAll(data);
     } catch (e) {
       Get.snackbar("Error", 'Fetch failed: $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<void> updateStudent() async {
+    if (selectedPostId == null) {
+      Get.snackbar('Error', 'No post selected');
+      return;
+    }
+
+    if (fullnameController.text.isEmpty ||
+        genderController.text.isEmpty ||
+        educationController.text.isEmpty ||
+        requiredController.text.isEmpty ||
+        paidController.text.isEmpty ||
+        phoneController.text.isEmpty) {
+      Get.snackbar('Error', 'Title and Description required');
+      return;
+    }
+
+    try {
+      isLoading(true);
+      double requiredAmount = double.parse(requiredController.text.trim());
+      double paidAmount = double.parse(paidController.text.trim());
+
+      final post = StudentModel(
+        fullname: fullnameController.text.trim(),
+        gender: selectedGender.value.trim(),
+        education: selectedEducation.value.trim(),
+        required: requiredAmount,
+        paid: paidAmount,
+        phone: phoneController.text.trim(),
+      );
+
+      bool success = await _postRepository.updateStudent(selectedPostId!, post);
+
+      if (success) {
+        fullnameController.clear();
+        genderController.clear();
+        educationController.clear();
+        requiredController.clear();
+        paidController.clear();
+        phoneController.clear();
+        selectedGender.value = ''; //
+        selectedEducation.value = ''; // Reset selected education
+        Get.snackbar('Updated', 'Student updated');
+        isStudentCreated(true);
+        await fetchAllStudents();
+      } else {
+        Get.snackbar('Error', 'Update failed');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Error: $e');
     } finally {
       isLoading(false);
     }

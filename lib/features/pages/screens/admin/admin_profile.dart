@@ -105,7 +105,7 @@ class _AdminProfileState extends State<AdminProfile> {
 
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Add New Admin'),
+        title: const Text('Admin Profile'),
         actions: [
           IconButton(
             icon: Icon(isDarkMode ? Icons.brightness_7 : Icons.brightness_4),

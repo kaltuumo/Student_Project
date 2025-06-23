@@ -2,6 +2,7 @@ class StudentModel {
   final String? id;
   final String fullname;
   final String gender;
+  final String education;
   final double required;
   final double paid;
   final double? remaining;
@@ -11,11 +12,15 @@ class StudentModel {
   final String? updateDate;
   final String? updateTime;
 
+  String get status =>
+      (remaining != null && remaining == 0) ? 'Approved' : 'Pending';
+
   // ✅ Constructor for reading full student info from backend
   StudentModel({
     this.id,
     required this.fullname,
     required this.gender,
+    required this.education,
     required this.required,
     required this.paid,
     this.remaining,
@@ -30,6 +35,7 @@ class StudentModel {
   StudentModel.create({
     required this.fullname,
     required this.gender,
+    required this.education,
     required this.required,
     required this.paid,
     required this.phone,
@@ -45,6 +51,7 @@ class StudentModel {
       id: json['_id'],
       fullname: json['fullname'],
       gender: json['gender'],
+      education: json['education'],
       required: (json['required'] as num).toDouble(),
       paid: (json['paid'] as num).toDouble(),
       remaining:
@@ -63,6 +70,7 @@ class StudentModel {
     return {
       'fullname': fullname,
       'gender': gender,
+      'education': education,
       'required': required,
       'paid': paid,
       'phone': phone,

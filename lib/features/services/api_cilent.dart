@@ -161,12 +161,14 @@ class ApiClient {
 
     try {
       final response = await http.get(url);
+      print("Response status: ${response.statusCode}"); // Log status
+      print("Response body: ${response.body}"); // Log the body
 
       if (response.statusCode == 200) {
         final jsonBody = jsonDecode(response.body);
 
         List students = jsonBody['data'];
-        // print("RESPONSE DATA: $jsonBody");
+        print("RESPONSE DATA: $jsonBody");
 
         return students;
       } else {
@@ -191,6 +193,42 @@ class ApiClient {
     return response;
   }
 
+  static Future<bool> updateStudent(String id, StudentModel post) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      Get.snackbar('Error', 'User not logged in');
+      return false;
+    }
+
+    final url = Uri.parse(
+      '${ApiConstants.studentEndpoint}/update-student?/$id',
+    );
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(post.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        final responseBody = jsonDecode(response.body);
+        String error = responseBody['message'] ?? 'Failed to update post';
+        Get.snackbar('Error', error);
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Something went wrong: $e');
+      return false;
+    }
+  }
   // DELETE STUDENT
 
   static Future<bool> deletePost(String id) async {

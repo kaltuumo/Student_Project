@@ -15,6 +15,10 @@ class StudentRepositories {
         .toList();
   }
 
+  Future<bool> updateStudent(String id, StudentModel student) {
+    return ApiClient.updateStudent(id, student);
+  }
+
   // Delete a post by id
   Future<bool> deleteStudent(String id) {
     return ApiClient.deletePost(id);

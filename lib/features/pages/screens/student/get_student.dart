@@ -4,6 +4,7 @@ import 'package:student_project/features/pages/controllers/student_controller.da
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
 import 'package:student_project/features/pages/screens/student/add_student.dart';
+import 'package:student_project/features/pages/screens/student/update_student.dart';
 
 class GetStudent extends StatefulWidget {
   const GetStudent({super.key});
@@ -163,8 +164,12 @@ class _GetStudentState extends State<GetStudent> {
                                 PopupMenuButton<String>(
                                   onSelected: (value) {
                                     if (value == 'update') {
-                                      // Halkan ku samee update action
-                                      print('Update student');
+                                      studentController.setSelectedPostId(
+                                        student.id!,
+                                      );
+                                      Get.to(
+                                        () => UpdateStudent(student: student),
+                                      );
                                     } else if (value == 'delete') {
                                       _showDeleteConfirmationDialog(context);
                                       studentController.selectedPostId =
@@ -315,6 +320,30 @@ class _GetStudentState extends State<GetStudent> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 15),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              width: 125,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color.fromARGB(
+                                  255,
+                                  100,
+                                  141,
+                                  101,
+                                ).withOpacity(0.5),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.school, size: 20),
+                                  SizedBox(width: 10),
+                                  Text("${student.education}"),
+                                ],
+                              ),
+                            ),
                             SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -353,6 +382,52 @@ class _GetStudentState extends State<GetStudent> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Divider(thickness: 2, indent: 1, endIndent: 1),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(children: [Text("Activity")]),
+                                    Text(
+                                      "\$${student.required}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            student.status == 'Approved'
+                                                ? Colors.green.withOpacity(0.4)
+                                                : Colors.orange.withOpacity(
+                                                  0.4,
+                                                ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        student.status,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ],
