@@ -6,6 +6,7 @@ import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
 import 'package:student_project/features/pages/screens/student/get_student.dart';
 import 'package:student_project/utils/constant/colors.dart';
+import 'package:student_project/utils/constant/images.dart';
 import 'package:student_project/utils/constant/sizes.dart';
 
 class AddStudent extends StatefulWidget {
@@ -180,7 +181,7 @@ class _AddStudentState extends State<AddStudent> {
 
           const SizedBox(height: 24),
           _buildLabel("Phone"),
-          _buildTextField(
+          _buildTextFieldPhone(
             studentController.phoneController,
             'Phone Number',
             keyboardType: TextInputType.phone,
@@ -232,6 +233,57 @@ class _AddStudentState extends State<AddStudent> {
       decoration: InputDecoration(
         hintText: hintText,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+    );
+  }
+
+  Widget _buildTextFieldPhone(
+    TextEditingController controller,
+    String hintText, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+        // Custom prefix inside the TextField
+        prefixIcon: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(width: AppSizes.sm),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppSizes.borderRadius),
+                child: Image.asset(
+                  AppImages.somaliFlag,
+                  width: 45,
+                  height: 30,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: AppSizes.xl),
+              Text(
+                '+252',
+                style: TextStyle(
+                  fontSize: AppSizes.lg,
+                  color: Colors.black.withOpacity(0.4),
+                ),
+              ),
+              const SizedBox(width: AppSizes.xl),
+              Text(
+                '|',
+                style: TextStyle(
+                  color: AppColors.blackColor.withOpacity(0.25),
+                  fontSize: 30,
+                  fontWeight: FontWeight.w100,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

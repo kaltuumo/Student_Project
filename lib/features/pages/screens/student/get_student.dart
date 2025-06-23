@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
+import 'package:student_project/features/pages/screens/payments/get_pending.dart';
 import 'package:student_project/features/pages/screens/student/add_student.dart';
 import 'package:student_project/features/pages/screens/student/update_student.dart';
 
@@ -66,6 +67,13 @@ class _GetStudentState extends State<GetStudent> {
               onTap: () => Get.to(() => const GetStudent()),
             ),
             Divider(thickness: 1, indent: 16, endIndent: 16),
+            ListTile(
+              title: const Text('Pending'),
+              leading: const Icon(Icons.pending),
+              onTap: () {
+                Get.to(() => GetPending());
+              },
+            ),
             ListTile(
               title: const Text('Student Report'),
               leading: const Icon(Icons.report),

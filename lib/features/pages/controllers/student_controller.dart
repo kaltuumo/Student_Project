@@ -130,13 +130,35 @@ class StudentController extends GetxController {
       return;
     }
 
-    if (fullnameController.text.isEmpty ||
-        genderController.text.isEmpty ||
-        educationController.text.isEmpty ||
-        requiredController.text.isEmpty ||
-        paidController.text.isEmpty ||
-        phoneController.text.isEmpty) {
-      Get.snackbar('Error', 'Title and Description required');
+    // Validate if any fields are empty
+    if (fullnameController.text.isEmpty) {
+      Get.snackbar('Error', 'Full Name is required');
+      return;
+    }
+
+    // Check if gender is selected (validate the RxString selectedGender)
+    if (selectedGender.value.isEmpty) {
+      Get.snackbar('Error', 'Gender is required');
+      return;
+    }
+
+    if (selectedEducation.value.isEmpty) {
+      Get.snackbar('Error', 'Education is required');
+      return;
+    }
+
+    if (requiredController.text.isEmpty) {
+      Get.snackbar('Error', 'Required field is required');
+      return;
+    }
+
+    if (paidController.text.isEmpty) {
+      Get.snackbar('Error', 'Paid field is required');
+      return;
+    }
+
+    if (phoneController.text.isEmpty) {
+      Get.snackbar('Error', 'Phone field is required');
       return;
     }
 
@@ -163,8 +185,8 @@ class StudentController extends GetxController {
         requiredController.clear();
         paidController.clear();
         phoneController.clear();
-        selectedGender.value = ''; //
-        selectedEducation.value = ''; // Reset selected education
+        selectedGender.value = ''; // Reset gender
+        selectedEducation.value = ''; // Reset education
         Get.snackbar('Updated', 'Student updated');
         isStudentCreated(true);
         await fetchAllStudents();

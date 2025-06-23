@@ -282,21 +282,15 @@ class _AddAdminState extends State<AddAdmin> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryColor,
-                          ),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryColor,
-                          ),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryColor,
-                          ),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                       ),
                     ),
@@ -317,21 +311,15 @@ class _AddAdminState extends State<AddAdmin> {
                         hintStyle: TextStyle(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryColor,
-                          ),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryColor,
-                          ),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: AppColors.primaryColor,
-                          ),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                       ),
                     ),

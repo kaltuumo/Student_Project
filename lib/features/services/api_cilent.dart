@@ -179,6 +179,29 @@ class ApiClient {
     }
   }
 
+  static Future<List<dynamic>> getPending() async {
+    final url = Uri.parse('${ApiConstants.studentEndpoint}/get-pending');
+
+    try {
+      final response = await http.get(url);
+      print("Response status: ${response.statusCode}"); // Log status
+      print("Response body: ${response.body}"); // Log the body
+
+      if (response.statusCode == 200) {
+        final jsonBody = jsonDecode(response.body);
+
+        List students = jsonBody['data'];
+        print("RESPONSE DATA: $jsonBody");
+
+        return students;
+      } else {
+        throw Exception('Failed to load Students');
+      }
+    } catch (e) {
+      throw Exception('Failed to load Students: $e');
+    }
+  }
+
   static Future<http.Response> getAllStudents(String token) async {
     final url = Uri.parse('${ApiConstants.studentEndpoint}/all-students');
 
@@ -193,7 +216,7 @@ class ApiClient {
     return response;
   }
 
-  static Future<bool> updateStudent(String id, StudentModel post) async {
+  static Future<bool> updateStudent(String id, StudentModel student) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
@@ -202,9 +225,7 @@ class ApiClient {
       return false;
     }
 
-    final url = Uri.parse(
-      '${ApiConstants.studentEndpoint}/update-student?/$id',
-    );
+    final url = Uri.parse('${ApiConstants.studentEndpoint}/update-student/$id');
 
     try {
       final response = await http.put(
@@ -213,7 +234,7 @@ class ApiClient {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(post.toJson()),
+        body: jsonEncode(student.toJson()),
       );
 
       if (response.statusCode == 200) {
