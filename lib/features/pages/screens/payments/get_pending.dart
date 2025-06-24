@@ -80,7 +80,7 @@ class _GetPendingState extends State<GetPending> {
               title: const Text('Pending'),
               leading: const Icon(Icons.report),
               onTap: () {
-                // Get.to(() => getpe)
+                Get.to(() => GetPending());
               },
             ),
             ListTile(
@@ -146,7 +146,7 @@ class _GetPendingState extends State<GetPending> {
                         Text(
                           'Total Pending Students',
                           style: TextStyle(
-                            fontSize: AppSizes.md,
+                            fontSize: AppSizes.lg,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

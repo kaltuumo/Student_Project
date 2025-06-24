@@ -4,4 +4,5 @@ class ApiConstants {
   static const String profileAdminEndpoint = '$baseUrl/admin/all-admin';
 
   static const String studentEndpoint = '$baseUrl/students';
+  static const String attendanceEndpoint = '$baseUrl/attendance';
 }

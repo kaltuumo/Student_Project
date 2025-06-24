@@ -12,10 +12,11 @@ class StudentModel {
   final String? updateDate;
   final String? updateTime;
 
+  // Determine if the student has "Approved" or "Pending" status
   String get status =>
       (remaining != null && remaining == 0) ? 'Approved' : 'Pending';
 
-  // ✅ Constructor for reading full student info from backend
+  // Constructor for reading full student info from the backend
   StudentModel({
     this.id,
     required this.fullname,
@@ -31,7 +32,7 @@ class StudentModel {
     this.updateTime,
   });
 
-  // ✅ Used only when sending new student to API
+  // Constructor for sending new student to the API (without ID and timestamps)
   StudentModel.create({
     required this.fullname,
     required this.gender,
@@ -46,6 +47,7 @@ class StudentModel {
        updateDate = null,
        updateTime = null;
 
+  // Factory constructor to parse data from JSON
   factory StudentModel.fromJson(Map<String, dynamic> json) {
     return StudentModel(
       id: json['_id'],
@@ -66,6 +68,7 @@ class StudentModel {
     );
   }
 
+  // Convert model to JSON format for API requests
   Map<String, dynamic> toJson() {
     return {
       'fullname': fullname,

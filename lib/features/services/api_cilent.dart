@@ -5,7 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
 import 'package:student_project/features/auth/screens/admin/login_admin.dart';
+import 'package:student_project/features/pages/models/attendence_model.dart';
 import 'package:student_project/features/pages/models/student_model.dart';
+import 'package:student_project/features/pages/models/student_report_model.dart';
 import 'package:student_project/utils/constant/api_constant.dart';
 
 class ApiClient {
@@ -286,6 +288,53 @@ class ApiClient {
     } catch (e) {
       print('Error deleting post: $e');
       return false;
+    }
+  }
+
+  static Future<bool> markAttendance(AttendanceModel attendance) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      Get.snackbar('Error', 'User not logged in');
+      return false;
+    }
+
+    final url = Uri.parse('${ApiConstants.attendanceEndpoint}/mark');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(attendance.toJson()),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return true;
+    } else {
+      print('Error: ${response.statusCode}, Response: ${response.body}');
+      return false;
+    }
+  }
+
+  // Statistics Student
+
+  static Future<StudentReportModel?> getStudentStatistics() async {
+    final url = Uri.parse('${ApiConstants.studentEndpoint}/statistics');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return StudentReportModel.fromJson(body['data']);
+      } else {
+        throw Exception('Failed to load statistics');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
     }
   }
 

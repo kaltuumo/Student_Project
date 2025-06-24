@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
+import 'package:student_project/features/pages/screens/attendence/daily_attendance.dart';
 import 'package:student_project/features/pages/screens/student/get_student.dart';
 import 'package:student_project/utils/constant/colors.dart';
 import 'package:student_project/utils/constant/images.dart';
@@ -97,6 +98,8 @@ class _AddStudentState extends State<AddStudent> {
               title: const Text('Daily Attendance'),
               leading: const Icon(Icons.access_time),
               onTap: () {
+                Get.to(() => DailyAttendance());
+
                 // Navigate to Attendance Screen
               },
             ),

@@ -14,7 +14,7 @@ class StudentController extends GetxController {
   final RxString selectedEducation = ''.obs; // ✅ Used by radio buttons
 
   final RxList<StudentModel> posts = <StudentModel>[].obs;
-  final StudentRepositories _postRepository = StudentRepositories();
+  final StudentRepositories _studentRepository = StudentRepositories();
 
   final isLoading = false.obs;
   final isStudentCreated = false.obs;
@@ -61,7 +61,7 @@ class StudentController extends GetxController {
         phone: phoneController.text.trim(),
       );
 
-      bool success = await _postRepository.createStudent(post);
+      bool success = await _studentRepository.createStudent(post);
 
       if (success) {
         fullnameController.clear();
@@ -93,7 +93,7 @@ class StudentController extends GetxController {
 
     try {
       isLoading(true);
-      bool success = await _postRepository.deleteStudent(selectedPostId!);
+      bool success = await _studentRepository.deleteStudent(selectedPostId!);
 
       if (success) {
         Get.snackbar('Deleted', 'Student deleted');
@@ -114,7 +114,7 @@ class StudentController extends GetxController {
   Future<void> fetchAllStudents() async {
     try {
       isLoading(true);
-      final data = await _postRepository.fetchStudents();
+      final data = await _studentRepository.fetchStudents();
       print("Fetched students: $data"); // Debug line
       posts.assignAll(data);
     } catch (e) {
@@ -176,7 +176,10 @@ class StudentController extends GetxController {
         phone: phoneController.text.trim(),
       );
 
-      bool success = await _postRepository.updateStudent(selectedPostId!, post);
+      bool success = await _studentRepository.updateStudent(
+        selectedPostId!,
+        post,
+      );
 
       if (success) {
         fullnameController.clear();

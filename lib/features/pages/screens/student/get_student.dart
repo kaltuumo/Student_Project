@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
+import 'package:student_project/features/pages/screens/attendence/daily_attendance.dart';
 import 'package:student_project/features/pages/screens/payments/get_pending.dart';
 import 'package:student_project/features/pages/screens/student/add_student.dart';
+import 'package:student_project/features/pages/screens/student/student_report.dart';
 import 'package:student_project/features/pages/screens/student/update_student.dart';
 
 class GetStudent extends StatefulWidget {
@@ -77,12 +79,16 @@ class _GetStudentState extends State<GetStudent> {
             ListTile(
               title: const Text('Student Report'),
               leading: const Icon(Icons.report),
-              onTap: () {},
+              onTap: () {
+                Get.to(() => StudentReport());
+              },
             ),
             ListTile(
               title: const Text('Daily Attendance'),
               leading: const Icon(Icons.access_time),
-              onTap: () {},
+              onTap: () {
+                Get.to(() => DailyAttendance());
+              },
             ),
             Divider(thickness: 1, indent: 16, endIndent: 16),
             ListTile(
