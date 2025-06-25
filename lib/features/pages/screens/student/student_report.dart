@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
@@ -121,362 +122,645 @@ class _StudentReportState extends State<StudentReport> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Obx(() {
-          if (studentReportController.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
+        child: SingleChildScrollView(
+          child: Obx(() {
+            if (studentReportController.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (studentReportController.report.value == null) {
-            return const Center(child: Text('No students found.'));
-          }
+            if (studentReportController.report.value == null) {
+              return const Center(child: Text('No students found.'));
+            }
 
-          final studentReport = studentReportController.report.value!;
-          final activePercentage =
-              (studentReport.activeStudents / studentReport.totalStudents) *
-              100;
-          final inactivePercentage =
-              (studentReport.inactiveStudents / studentReport.totalStudents) *
-              100;
-          final paidPercentage =
-              (studentReport.paidStudents / studentReport.totalStudents) * 100;
-          final fullyPaidPercentage =
-              (studentReport.fullyPaidStudents / studentReport.totalStudents) *
-              100;
-          final balanceDuePercentage =
-              (studentReport.balanceDueStudents / studentReport.totalStudents) *
-              100;
-          final pendingPercentage =
-              (studentReport.pendingStudent / studentReport.totalStudents) *
-              100;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              Text(
-                "Student Statistics",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text("Summary based on ${studentReport.totalStudents} Students"),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    width: 140,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color.fromARGB(
-                        255,
-                        100,
-                        141,
-                        101,
-                      ).withOpacity(0.5),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.directions_run,
-                          size: 20,
-                          color: Colors.green.withOpacity(0.7),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("${studentReport.activeStudents}"),
-                            Text("Active"),
-                            Text(
-                              "${activePercentage.toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 30),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    width: 140,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey, // <-- halkan baa lagu beddelay
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.pause_circle_filled,
-                          size: 20,
-                          color: Colors.black,
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("${studentReport.inactiveStudents}"),
-                            Text("In Active"),
-                            Text(
-                              "${inactivePercentage.toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    width: 140,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.purple.withOpacity(0.5),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.verified,
-                          size: 20,
-                          color: Colors.purple.withOpacity(0.7),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("${studentReport.paidStudents}"),
-                            Text("Approved"),
-                            Text(
-                              "${paidPercentage.toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 30),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    width: 140,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.orange.withOpacity(
-                        0.4,
-                      ), // <-- halkan baa lagu beddelay
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.pending,
-                          size: 20,
-                          color: Colors.orange.withOpacity(0.7),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("${studentReport.pendingStudent}"),
-                            Text("Pending"),
-                            Text(
-                              "${pendingPercentage.toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    width: 140,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.red.withOpacity(0.5),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.task_alt,
-                          size: 20,
-                          color: Colors.red.withOpacity(0.7),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("${studentReport.fullyPaidStudents}"),
-                            Text("Fully Paid"),
-                            Text(
-                              "${fullyPaidPercentage.toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 30),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    width: 140,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.blue.withOpacity(
-                        0.4,
-                      ), // <-- halkan baa lagu beddelay
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          size: 20,
-                          color: Colors.blue.withOpacity(0.7),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("${studentReport.balanceDueStudents}"),
-                            Text("Balance Due"),
-                            Text(
-                              "${balanceDuePercentage.toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 24),
-              Text(
-                "Overall Financial",
-                style: TextStyle(
-                  fontSize: AppSizes.lg,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
+            final studentReport = studentReportController.report.value!;
+            final activePercentage =
+                (studentReport.activeStudents / studentReport.totalStudents) *
+                100;
+            final inactivePercentage =
+                (studentReport.inactiveStudents / studentReport.totalStudents) *
+                100;
+            final paidPercentage =
+                (studentReport.paidStudents / studentReport.totalStudents) *
+                100;
+            final fullyPaidPercentage =
+                (studentReport.fullyPaidStudents /
+                    studentReport.totalStudents) *
+                100;
+            final balanceDuePercentage =
+                (studentReport.balanceDueStudents /
+                    studentReport.totalStudents) *
+                100;
+            final pendingPercentage =
+                (studentReport.pendingStudent / studentReport.totalStudents) *
+                100;
 
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                // width: 140,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white, // <-- halkan baa lagu beddelay
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.green.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: Offset(2, 4),
-                    ),
-                  ],
+            final maleCount =
+                studentReportController.posts
+                    .where((s) => s.gender.toLowerCase() == 'male')
+                    .length;
+            final femaleCount =
+                studentReportController.posts
+                    .where((s) => s.gender.toLowerCase() == 'female')
+                    .length;
+            final totalCount = maleCount + femaleCount;
+
+            final malePercentage =
+                totalCount > 0 ? (maleCount / totalCount) * 100 : 0.0;
+            final femalePercentage =
+                totalCount > 0 ? (femaleCount / totalCount) * 100 : 0.0;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  "Student Statistics",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Text(
+                  "Summary based on ${studentReport.totalStudents} Students",
+                ),
+                const SizedBox(height: 20),
+                Row(
                   children: [
-                    SizedBox(width: 10),
-                    Text(
-                      "Financial Overview",
-                      style: TextStyle(
-                        fontSize: AppSizes.lg,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      width: 140,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color.fromARGB(
+                          255,
+                          100,
+                          141,
+                          101,
+                        ).withOpacity(0.5),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.directions_run,
+                            size: 20,
+                            color: Colors.green.withOpacity(0.7),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${studentReport.activeStudents}"),
+                              Text("Active"),
+                              Text(
+                                "${activePercentage.toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    Divider(
-                      thickness: 1,
-                      indent: 1,
-                      endIndent: 1,
-                      color: Colors.grey,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Total Requires"),
-                            Text(
-                              "\$${studentController.totalRequired.toStringAsFixed(2)}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-
-                        Column(
-                          children: [
-                            Text("Total Paid"),
-                            Text(
-                              "\$${studentController.totalPaid.toStringAsFixed(2)}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Total Remaining"),
-                            Text(
-                              "\$${studentController.totalRemaining.toStringAsFixed(2)}",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-
-                        Column(
-                          children: [
-                            Text("Overall Paid %"),
-                            Text(
-                              "${studentController.totalPaidPercentage.toStringAsFixed(2)}%",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
+                    SizedBox(width: 30),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      width: 140,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey, // <-- halkan baa lagu beddelay
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.pause_circle_filled,
+                            size: 20,
+                            color: Colors.black,
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${studentReport.inactiveStudents}"),
+                              Text("In Active"),
+                              Text(
+                                "${inactivePercentage.toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          );
-        }),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      width: 140,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.purple.withOpacity(0.5),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.verified,
+                            size: 20,
+                            color: Colors.purple.withOpacity(0.7),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${studentReport.paidStudents}"),
+                              Text("Approved"),
+                              Text(
+                                "${paidPercentage.toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 30),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      width: 140,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.orange.withOpacity(
+                          0.4,
+                        ), // <-- halkan baa lagu beddelay
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.pending,
+                            size: 20,
+                            color: Colors.orange.withOpacity(0.7),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${studentReport.pendingStudent}"),
+                              Text("Pending"),
+                              Text(
+                                "${pendingPercentage.toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      width: 140,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.red.withOpacity(0.5),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.task_alt,
+                            size: 20,
+                            color: Colors.red.withOpacity(0.7),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${studentReport.fullyPaidStudents}"),
+                              Text("Fully Paid"),
+                              Text(
+                                "${fullyPaidPercentage.toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 30),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      width: 140,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue.withOpacity(
+                          0.4,
+                        ), // <-- halkan baa lagu beddelay
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 20,
+                            color: Colors.blue.withOpacity(0.7),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${studentReport.balanceDueStudents}"),
+                              Text("Balance Due"),
+                              Text(
+                                "${balanceDuePercentage.toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 24),
+                Text(
+                  "Overall Financial",
+                  style: TextStyle(
+                    fontSize: AppSizes.lg,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  // width: 140,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white, // <-- halkan baa lagu beddelay
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.green.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: Offset(2, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 10),
+                      Text(
+                        "Financial Overview",
+                        style: TextStyle(
+                          fontSize: AppSizes.lg,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Divider(
+                        thickness: 1,
+                        indent: 1,
+                        endIndent: 1,
+                        color: Colors.grey,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Total Requires"),
+                              Text(
+                                "\$${studentReportController.totalRequired.toStringAsFixed(2)}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+
+                          Column(
+                            children: [
+                              Text("Total Paid"),
+                              Text(
+                                "\$${studentReportController.totalPaid.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Total Remaining"),
+                              Text(
+                                "\$${studentReportController.totalRemaining.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Column(
+                            children: [
+                              Text("Overall Paid %"),
+                              Text(
+                                "${studentReportController.totalPaidPercentage.toStringAsFixed(2)}%",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 200,
+                  child: PieChart(
+                    PieChartData(
+                      sections: [
+                        PieChartSectionData(
+                          value: malePercentage,
+                          color: Colors.blue,
+                          title: '${malePercentage.toStringAsFixed(1)}% Male',
+                          radius: 50,
+                          titleStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                        PieChartSectionData(
+                          value: femalePercentage,
+                          color: Colors.pink,
+                          title:
+                              '${femalePercentage.toStringAsFixed(1)}% Female',
+                          radius: 50,
+                          titleStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                      sectionsSpace: 2,
+                      centerSpaceRadius: 40,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 24),
+                Text(
+                  "Overall Financial By Male",
+                  style: TextStyle(
+                    fontSize: AppSizes.lg,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  // width: 140,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white, // <-- halkan baa lagu beddelay
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.green.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: Offset(2, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 10),
+                      Text(
+                        "Financial Overview By Male",
+                        style: TextStyle(
+                          fontSize: AppSizes.lg,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Divider(
+                        thickness: 1,
+                        indent: 1,
+                        endIndent: 1,
+                        color: Colors.grey,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Total Requires"),
+                              Text(
+                                "\$${studentReportController.totalRequiredMale.toStringAsFixed(2)}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+
+                          Column(
+                            children: [
+                              Text("Total Paid"),
+                              Text(
+                                "\$${studentReportController.totalPaidMale.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Total Remaining"),
+                              Text(
+                                "\$${studentReportController.totalRemainingMale.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Column(
+                            children: [
+                              Text("Overall Paid %"),
+                              Text(
+                                "${studentReportController.totalPaidPercentageMale.toStringAsFixed(2)}%",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 24),
+                Text(
+                  "Overall Financial By Female",
+                  style: TextStyle(
+                    fontSize: AppSizes.lg,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  // width: 140,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white, // <-- halkan baa lagu beddelay
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.green.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: Offset(2, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 10),
+                      Text(
+                        "Financial Overview By Female",
+                        style: TextStyle(
+                          fontSize: AppSizes.lg,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Divider(
+                        thickness: 1,
+                        indent: 1,
+                        endIndent: 1,
+                        color: Colors.grey,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Total Requires"),
+                              Text(
+                                "\$${studentReportController.totalRequiredFemale.toStringAsFixed(2)}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+
+                          Column(
+                            children: [
+                              Text("Total Paid"),
+                              Text(
+                                "\$${studentReportController.totalPaidFemale.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Total Remaining"),
+                              Text(
+                                "\$${studentReportController.totalRemainingFemale.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Column(
+                            children: [
+                              Text("Overall Paid %"),
+                              Text(
+                                "${studentReportController.totalPaidPercentageFemale.toStringAsFixed(2)}%",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }
