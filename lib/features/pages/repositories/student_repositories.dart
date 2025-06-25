@@ -1,5 +1,4 @@
 import 'package:student_project/features/pages/models/student_model.dart';
-import 'package:student_project/features/pages/models/student_report_model.dart';
 import 'package:student_project/features/services/api_cilent.dart';
 
 class StudentRepositories {
@@ -23,10 +22,6 @@ class StudentRepositories {
     return postsData
         .map<StudentModel>((json) => StudentModel.fromJson(json))
         .toList();
-  }
-
-  Future<StudentReportModel?> getStatistics() {
-    return ApiClient.getStudentStatistics();
   }
 
   Future<bool> updateStudent(String id, StudentModel student) {

@@ -5,12 +5,13 @@ class StudentModel {
   final String education;
   final double required;
   final double paid;
-  final double? remaining;
   final String phone;
   final String? createdDate;
   final String? createdTime;
   final String? updateDate;
   final String? updateTime;
+
+  double get remaining => required - paid;
 
   // Determine if the student has "Approved" or "Pending" status
   String get status =>
@@ -24,7 +25,6 @@ class StudentModel {
     required this.education,
     required this.required,
     required this.paid,
-    this.remaining,
     required this.phone,
     this.createdDate,
     this.createdTime,
@@ -41,7 +41,6 @@ class StudentModel {
     required this.paid,
     required this.phone,
   }) : id = null,
-       remaining = null,
        createdDate = null,
        createdTime = null,
        updateDate = null,
@@ -56,10 +55,7 @@ class StudentModel {
       education: json['education'],
       required: (json['required'] as num).toDouble(),
       paid: (json['paid'] as num).toDouble(),
-      remaining:
-          json['remaining'] != null
-              ? (json['remaining'] as num).toDouble()
-              : null,
+
       phone: json['phone'],
       createdDate: json['createdDate'],
       createdTime: json['createdTime'],

@@ -1,12 +1,14 @@
 import 'package:get/get.dart';
 import 'package:student_project/features/pages/models/student_report_model.dart';
-import 'package:student_project/features/pages/repositories/student_repositories.dart';
+import 'package:student_project/features/pages/repositories/student_report_repositories.dart';
 
 class StudentReportController extends GetxController {
-  final StudentRepositories _studentRepository = StudentRepositories();
+  final StudentReportRepositories studentReportRepositories = Get.put(
+    StudentReportRepositories(),
+  );
 
-  final RxList<StudentReportModel> posts = <StudentReportModel>[].obs;
-  var isLoading = false.obs;
+  final Rxn<StudentReportModel> report = Rxn<StudentReportModel>();
+  final isLoading = false.obs;
 
   @override
   void onInit() {
@@ -17,11 +19,13 @@ class StudentReportController extends GetxController {
   Future<void> fetchStatistics() async {
     try {
       isLoading(true);
-      final data = await _studentRepository.getStatistics();
-      if (data != null)
-        posts.assignAll([data]); // hal object, ku gali liis ahaan
+      var data = await studentReportRepositories.getStatistics();
+      if (data != null) {
+        report.value = data;
+        print('Fetched Data: ${data.toString()}'); // Log data for debugging
+      }
     } catch (e) {
-      Get.snackbar("Error", 'Fetch failed: $e');
+      Get.snackbar("Error", 'Fetch Failed $e');
     } finally {
       isLoading(false);
     }

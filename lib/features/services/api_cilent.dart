@@ -320,10 +320,8 @@ class ApiClient {
   }
 
   // Statistics Student
-
   static Future<StudentReportModel?> getStudentStatistics() async {
     final url = Uri.parse('${ApiConstants.studentEndpoint}/statistics');
-
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -333,7 +331,7 @@ class ApiClient {
         throw Exception('Failed to load statistics');
       }
     } catch (e) {
-      print('Error: $e');
+      print("Error:, $e");
       return null;
     }
   }

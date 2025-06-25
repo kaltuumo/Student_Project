@@ -16,6 +16,18 @@ class StudentController extends GetxController {
   final RxList<StudentModel> posts = <StudentModel>[].obs;
   final StudentRepositories _studentRepository = StudentRepositories();
 
+  int get totalRequired =>
+      posts.fold(0, (sum, item) => sum + item.required.toInt());
+  int get totalPaid => posts.fold(0, (sum, item) => sum + item.paid.toInt());
+  int get totalRemaining =>
+      posts.fold(0, (sum, item) => sum + (item.required - item.paid).toInt());
+
+  double get totalPaidPercentage {
+    double totalRequired =
+        this.totalRequired.toDouble(); // Total required value as double
+    return (totalRequired > 0) ? (totalPaid / totalRequired) * 100 : 0;
+  }
+
   final isLoading = false.obs;
   final isStudentCreated = false.obs;
   String? selectedPostId; // For update operations

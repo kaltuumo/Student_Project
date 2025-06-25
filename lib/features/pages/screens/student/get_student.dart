@@ -367,7 +367,7 @@ class _GetStudentState extends State<GetStudent> {
                                   children: [
                                     Text("Required"),
                                     Text(
-                                      "\$${student.required}",
+                                      "\$${student.required.toStringAsFixed(2)}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -380,7 +380,7 @@ class _GetStudentState extends State<GetStudent> {
                                   children: [
                                     Text("Paid"),
                                     Text(
-                                      "\$${student.paid}",
+                                      "\$${student.paid.toStringAsFixed(2)}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -392,7 +392,7 @@ class _GetStudentState extends State<GetStudent> {
                                   children: [
                                     Text("Remaining"),
                                     Text(
-                                      "\$${student.remaining}",
+                                      "\$${student.remaining.toStringAsFixed(2)}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.red,
