@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:student_project/features/pages/models/student_model.dart';
@@ -43,6 +44,8 @@ class StudentController extends GetxController {
       Get.snackbar(
         'Foomka Khaldan',
         'Fadlan buuxi dhammaan meelaha, gaar ahaan dooro jinsiga (Male ama Female)',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
       return;
     }
@@ -72,14 +75,29 @@ class StudentController extends GetxController {
         phoneController.clear();
         selectedGender.value = ''; //
         selectedEducation.value = ''; // Reset selected education
-        Get.snackbar('Success', 'Student created');
+        Get.snackbar(
+          'Success',
+          'Student created',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
         isStudentCreated(true);
         await fetchAllStudents();
       } else {
-        Get.snackbar('Error', 'Student creation failed');
+        Get.snackbar(
+          'Error',
+          'Student creation failed',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Error occurred: $e');
+      Get.snackbar(
+        'Error',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        'Error occurred: $e',
+      );
     } finally {
       isLoading(false);
     }
@@ -96,11 +114,21 @@ class StudentController extends GetxController {
       bool success = await _studentRepository.deleteStudent(selectedPostId!);
 
       if (success) {
-        Get.snackbar('Deleted', 'Student deleted');
+        Get.snackbar(
+          'Deleted',
+          'Student deleted',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
         selectedPostId = null;
         await fetchAllStudents();
       } else {
-        Get.snackbar('Error', 'Delete failed');
+        Get.snackbar(
+          'Error',
+          'Delete failed',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
       Get.snackbar('Error', 'Error: $e');
@@ -115,10 +143,15 @@ class StudentController extends GetxController {
     try {
       isLoading(true);
       final data = await _studentRepository.fetchStudents();
-      print("Fetched students: $data"); // Debug line
+      print("Fetched students:, $data"); // Debug line
       posts.assignAll(data);
     } catch (e) {
-      Get.snackbar("Error", 'Fetch failed: $e');
+      Get.snackbar(
+        "Error",
+        'Fetch failed: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading(false);
     }
@@ -190,11 +223,21 @@ class StudentController extends GetxController {
         phoneController.clear();
         selectedGender.value = ''; // Reset gender
         selectedEducation.value = ''; // Reset education
-        Get.snackbar('Updated', 'Student updated');
+        Get.snackbar(
+          'Updated',
+          'Student updated',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
         isStudentCreated(true);
         await fetchAllStudents();
       } else {
-        Get.snackbar('Error', 'Update failed');
+        Get.snackbar(
+          'Error',
+          'Update failed',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
       Get.snackbar('Error', 'Error: $e');

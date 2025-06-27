@@ -435,14 +435,10 @@ class _StudentReportState extends State<StudentReport> {
                   // width: 140,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.white, // <-- halkan baa lagu beddelay
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.green.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: Offset(2, 4),
-                      ),
-                    ],
+                    color:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[200],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -569,14 +565,10 @@ class _StudentReportState extends State<StudentReport> {
                   // width: 140,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.white, // <-- halkan baa lagu beddelay
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.green.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: Offset(2, 4),
-                      ),
-                    ],
+                    color:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[200],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -671,14 +663,10 @@ class _StudentReportState extends State<StudentReport> {
                   // width: 140,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.white, // <-- halkan baa lagu beddelay
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.green.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: Offset(2, 4),
-                      ),
-                    ],
+                    color:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[800]
+                            : Colors.grey[200],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

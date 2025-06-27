@@ -15,15 +15,6 @@ class StudentRepositories {
         .toList();
   }
 
-  Future<List<StudentModel>> fetchPending() async {
-    final postsData = await ApiClient.getPending(); // API call
-    print("✅ JSON DATA: $postsData"); // Ku dar tan si aad u hubiso xogta
-
-    return postsData
-        .map<StudentModel>((json) => StudentModel.fromJson(json))
-        .toList();
-  }
-
   Future<bool> updateStudent(String id, StudentModel student) {
     return ApiClient.updateStudent(id, student);
   }

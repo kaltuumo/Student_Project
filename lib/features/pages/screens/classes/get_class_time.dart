@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:student_project/features/pages/controllers/student_controller.dart';
+import 'package:student_project/features/pages/controllers/class_time_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
 import 'package:student_project/features/pages/screens/attendence/daily_attendance.dart';
-import 'package:student_project/features/pages/screens/classes/get_class_time.dart';
+import 'package:student_project/features/pages/screens/classes/update_class_time.dart';
 import 'package:student_project/features/pages/screens/payments/get_pending.dart';
 import 'package:student_project/features/pages/screens/student/add_student.dart';
+import 'package:student_project/features/pages/screens/student/get_student.dart';
 import 'package:student_project/features/pages/screens/student/student_report.dart';
 import 'package:student_project/features/pages/screens/student/update_student.dart';
+import 'package:student_project/utils/constant/colors.dart';
 
-class GetStudent extends StatefulWidget {
-  const GetStudent({super.key});
+class GetClassTime extends StatefulWidget {
+  const GetClassTime({super.key});
 
   @override
-  State<GetStudent> createState() => _GetStudentState();
+  State<GetClassTime> createState() => _GetClassTimeState();
 }
 
-class _GetStudentState extends State<GetStudent> {
+class _GetClassTimeState extends State<GetClassTime> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final StudentController studentController = Get.put(StudentController());
+
+  final ClassTimeController classTimeController = Get.put(
+    ClassTimeController(),
+  );
 
   bool isDarkMode = false;
 
@@ -40,7 +45,7 @@ class _GetStudentState extends State<GetStudent> {
       key: _scaffoldKey,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('All Students'),
+        title: const Text('All Classes'),
         actions: [
           IconButton(
             icon: Icon(isDarkMode ? Icons.brightness_7 : Icons.brightness_4),
@@ -151,25 +156,29 @@ class _GetStudentState extends State<GetStudent> {
             // Student List
             Expanded(
               child: Obx(() {
-                if (studentController.isLoading.value) {
+                if (classTimeController.isLoading.value) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (studentController.posts.isEmpty) {
-                  return const Center(child: Text('No students found.'));
+                if (classTimeController.posts.isEmpty) {
+                  return const Center(child: Text('No Classes found.'));
                 }
 
                 return ListView.builder(
-                  itemCount: studentController.posts.length,
+                  itemCount: classTimeController.posts.length,
                   itemBuilder: (context, index) {
-                    final student = studentController.posts[index];
+                    final classes = classTimeController.posts[index];
                     return Card(
                       elevation: 2,
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       child: ListTile(
-                        title: Text(
-                          student.fullname,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        title: Row(
+                          children: [
+                            Text(
+                              classes.teacher,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,20 +186,19 @@ class _GetStudentState extends State<GetStudent> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Registered: ${student.createdDate}"),
                                 PopupMenuButton<String>(
                                   onSelected: (value) {
                                     if (value == 'update') {
-                                      studentController.setSelectedPostId(
-                                        student.id!,
+                                      classTimeController.setSelectedPostId(
+                                        classes.id!,
                                       );
                                       Get.to(
-                                        () => UpdateStudent(student: student),
+                                        () => UpdateClassTime(classes: classes),
                                       );
                                     } else if (value == 'delete') {
                                       _showDeleteConfirmationDialog(context);
-                                      studentController.selectedPostId =
-                                          student.id;
+                                      classTimeController.selectedPostId =
+                                          classes.id;
                                     }
                                   },
                                   itemBuilder:
@@ -227,7 +235,6 @@ class _GetStudentState extends State<GetStudent> {
                                           ),
                                         ),
                                       ],
-                                  icon: const Icon(Icons.more_vert),
                                 ),
                               ],
                             ),
@@ -252,42 +259,14 @@ class _GetStudentState extends State<GetStudent> {
                                   ),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.phone, size: 20),
+                                      Icon(Icons.subject, size: 20),
                                       SizedBox(width: 10),
-                                      Text("${student.phone}"),
+                                      Text(classes.subject),
                                     ],
                                   ),
                                 ),
 
                                 SizedBox(width: 10),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 5,
-                                  ),
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: const Color.fromARGB(
-                                      255,
-                                      100,
-                                      141,
-                                      101,
-                                    ).withOpacity(0.5),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.person, size: 20),
-                                      SizedBox(width: 10),
-                                      Text("${student.gender}"),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 15),
-                            Row(
-                              children: [
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 10,
@@ -305,9 +284,37 @@ class _GetStudentState extends State<GetStudent> {
                                   ),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.access_time, size: 20),
+                                      Icon(Icons.room, size: 20),
                                       SizedBox(width: 10),
-                                      Text("${student.createdTime}"),
+                                      Text(classes.room),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      100,
+                                      141,
+                                      101,
+                                    ).withOpacity(0.5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.calendar_today, size: 20),
+                                      SizedBox(width: 10),
+                                      Text(classes.day),
                                     ],
                                   ),
                                 ),
@@ -329,9 +336,9 @@ class _GetStudentState extends State<GetStudent> {
                                   ),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.date_range, size: 20),
+                                      Icon(Icons.access_time, size: 20),
                                       SizedBox(width: 10),
-                                      Text("${student.createdDate}"),
+                                      Text(classes.startTime),
                                     ],
                                   ),
                                 ),
@@ -355,101 +362,11 @@ class _GetStudentState extends State<GetStudent> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.school, size: 20),
+                                  Icon(Icons.access_time, size: 20),
                                   SizedBox(width: 10),
-                                  Text("${student.education}"),
+                                  Text(classes.endTime),
                                 ],
                               ),
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Required"),
-                                    Text(
-                                      "\$${student.required.toStringAsFixed(2)}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Paid"),
-                                    Text(
-                                      "\$${student.paid.toStringAsFixed(2)}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Remaining"),
-                                    Text(
-                                      "\$${student.remaining.toStringAsFixed(2)}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Divider(thickness: 2, indent: 1, endIndent: 1),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(children: [Text("Activity")]),
-                                    Text(
-                                      "\$${student.required}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 6,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            student.status == 'Approved'
-                                                ? Colors.green.withOpacity(0.4)
-                                                : Colors.orange.withOpacity(
-                                                  0.4,
-                                                ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        student.status,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
                             ),
                           ],
                         ),
@@ -462,6 +379,179 @@ class _GetStudentState extends State<GetStudent> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showClassFormBottomSheet(context);
+        },
+        backgroundColor: Colors.green,
+        elevation: 6, // Hooska button-ka
+        tooltip: 'Add New',
+        child: Icon(Icons.add, color: Colors.white, size: 28),
+      ),
+    );
+  }
+
+  void _showClassFormBottomSheet(BuildContext context) {
+    final ClassTimeController classTimeController =
+        Get.find<ClassTimeController>();
+    final List<String> days = [
+      'Saturday',
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Wrap(
+              children: [
+                Center(
+                  child: Text(
+                    "Add New Class Time",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 70),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextFormField(
+                    controller: classTimeController.subjectController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Subject',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 70),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextFormField(
+                    controller: classTimeController.teacherController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Teacher',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 70),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextFormField(
+                    controller: classTimeController.roomController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Room',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 70),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Day',
+                    ),
+                    value:
+                        classTimeController.selectedDay.value.isNotEmpty
+                            ? classTimeController.selectedDay.value
+                            : null,
+                    items:
+                        days.map((String day) {
+                          return DropdownMenuItem<String>(
+                            value: day,
+                            child: Text(day),
+                          );
+                        }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        classTimeController.selectedDay.value = value;
+                      }
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 70),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextFormField(
+                    controller: classTimeController.startTimeController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Start Time',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 70),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: TextFormField(
+                    controller: classTimeController.endTimeController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter End Time',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 70),
+
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                  onPressed: () {
+                    classTimeController.createClassTime();
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.save),
+                  label: Text("Save"),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -481,8 +571,9 @@ class _GetStudentState extends State<GetStudent> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop(); // Close dialog
-                await studentController.deleteStudent(); // ✅ call delete
-                studentController.fetchAllStudents(); // optional: refresh list
+                await classTimeController.deleteClassTime(); // ✅ call delete
+                classTimeController
+                    .fetchAllClassTime(); // optional: refresh list
               },
               child: const Text('OK'),
             ),

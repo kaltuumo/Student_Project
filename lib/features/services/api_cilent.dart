@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import 'package:student_project/features/auth/screens/admin/login_admin.dart';
 import 'package:student_project/features/pages/models/attendence_model.dart';
+import 'package:student_project/features/pages/models/class_time_model.dart';
 import 'package:student_project/features/pages/models/student_model.dart';
 import 'package:student_project/features/pages/models/student_report_model.dart';
 import 'package:student_project/utils/constant/api_constant.dart';
@@ -140,6 +141,41 @@ class ApiClient {
     }
   }
 
+  static Future<bool> createClassTime(ClassTimeModel post) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      Get.snackbar('Error', 'User not logged in');
+      return false;
+    }
+
+    final url = Uri.parse('${ApiConstants.classEndpoint}/create-classtime');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(post.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        final responseBody = jsonDecode(response.body);
+        String error = responseBody['message'] ?? 'Failed to create Class';
+        Get.snackbar('Error', error);
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Something went wrong');
+      return false;
+    }
+  }
+
   static Future<http.Response> getAdminProfile(String token) async {
     final url = Uri.parse(
       ApiConstants.profileAdminEndpoint,
@@ -160,6 +196,31 @@ class ApiClient {
 
   static Future<List<dynamic>> getStudents() async {
     final url = Uri.parse('${ApiConstants.studentEndpoint}/all-students');
+
+    try {
+      final response = await http.get(url);
+      print("Response status: ${response.statusCode}"); // Log status
+      print("Response body: ${response.body}"); // Log the body
+
+      if (response.statusCode == 200) {
+        final jsonBody = jsonDecode(response.body);
+
+        List students = jsonBody['data'];
+        print("RESPONSE DATA: $jsonBody");
+
+        return students;
+      } else {
+        throw Exception('Failed to load Students');
+      }
+    } catch (e) {
+      throw Exception('Failed to load Students: $e');
+    }
+  }
+
+  // GET ALL CLASSTIME
+
+  static Future<List<dynamic>> getClassTime() async {
+    final url = Uri.parse('${ApiConstants.classEndpoint}/all-classtime');
 
     try {
       final response = await http.get(url);
@@ -252,6 +313,41 @@ class ApiClient {
       return false;
     }
   }
+
+  static Future<bool> updateClassTime(String id, ClassTimeModel classes) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      Get.snackbar('Error', 'User not logged in');
+      return false;
+    }
+
+    final url = Uri.parse('${ApiConstants.classEndpoint}/update-classtime/$id');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(classes.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        final responseBody = jsonDecode(response.body);
+        String error = responseBody['message'] ?? 'Failed to update Class';
+        Get.snackbar('Error', error);
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Something went wrong: $e');
+      return false;
+    }
+  }
   // DELETE STUDENT
 
   static Future<bool> deletePost(String id) async {
@@ -283,6 +379,43 @@ class ApiClient {
         return true;
       } else {
         print('Failed to delete post: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error deleting post: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> deleteClassTime(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print('Sending token: $token');
+
+    if (token == null || token.isEmpty) {
+      Get.snackbar('Error', 'No token found');
+      return false;
+    }
+
+    final url = Uri.parse(
+      '${ApiConstants.classEndpoint}/delete-classtime/$id',
+    ); // Correct URL with query string
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer $token', // Ensure token is being sent in the header
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Class deleted successfully');
+        return true;
+      } else {
+        print('Failed to delete Class: ${response.body}');
         return false;
       }
     } catch (e) {

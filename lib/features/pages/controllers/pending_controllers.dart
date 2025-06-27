@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:student_project/features/pages/models/student_model.dart';
@@ -22,7 +23,12 @@ class PendingControllers extends GetxController {
           data.where((student) => student.status == 'Pending').toList();
       posts.assignAll(pendingStudents); // Assign filtered list to posts
     } catch (e) {
-      Get.snackbar("Error", 'Fetch failed: $e');
+      Get.snackbar(
+        "Error",
+        'Fetch failed: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading(false); // Stop loading
     }
