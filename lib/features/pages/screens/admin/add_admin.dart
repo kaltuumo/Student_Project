@@ -24,7 +24,6 @@ class _AddAdminState extends State<AddAdmin> {
     final AuthController authController = Get.put(AuthController());
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     // final StudentController studentController = Get.put(StudentController());
-
     bool isDarkMode = false;
 
     // Method to toggle dark/light mode
@@ -57,12 +56,56 @@ class _AddAdminState extends State<AddAdmin> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                'Dashboard Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
+              child: Obx(() {
+                final String name = authController.fullname.value;
+                final String email = authController.email.value;
+                final String initial =
+                    name.isNotEmpty
+                        ? name[0].toUpperCase()
+                        : '?'; // xarafka 1aad
+
+                return Row(
+                  children: [
+                    // CircleAvatar with first letter
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      radius: 20,
+                      child: Text(
+                        initial,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          name.isNotEmpty ? 'Welcome, $name' : 'Dashboard Menu',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          email.isNotEmpty ? email : 'No email provided',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
             ),
             ListTile(
               title: const Text('Add Student'),

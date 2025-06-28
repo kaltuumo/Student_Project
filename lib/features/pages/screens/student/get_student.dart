@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:student_project/features/auth/controllers/auth_controller.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
@@ -9,6 +10,8 @@ import 'package:student_project/features/pages/screens/payments/get_pending.dart
 import 'package:student_project/features/pages/screens/student/add_student.dart';
 import 'package:student_project/features/pages/screens/student/student_report.dart';
 import 'package:student_project/features/pages/screens/student/update_student.dart';
+import 'package:student_project/utils/constant/colors.dart';
+import 'package:student_project/utils/constant/sizes.dart';
 
 class GetStudent extends StatefulWidget {
   const GetStudent({super.key});
@@ -20,6 +23,7 @@ class GetStudent extends StatefulWidget {
 class _GetStudentState extends State<GetStudent> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final StudentController studentController = Get.put(StudentController());
+  final AuthController authController = Get.find<AuthController>();
 
   bool isDarkMode = false;
 
@@ -32,6 +36,12 @@ class _GetStudentState extends State<GetStudent> {
     } else {
       Get.changeTheme(ThemeData.light());
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    authController.loadUserData(); // Fetch user data when the screen loads
   }
 
   @override
@@ -52,13 +62,58 @@ class _GetStudentState extends State<GetStudent> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                'Dashboard Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
+              child: Obx(() {
+                final String name = authController.fullname.value;
+                final String email = authController.email.value;
+                final String initial =
+                    name.isNotEmpty
+                        ? name[0].toUpperCase()
+                        : '?'; // xarafka 1aad
+
+                return Row(
+                  children: [
+                    // CircleAvatar with first letter
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      radius: 20,
+                      child: Text(
+                        initial,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          name.isNotEmpty ? 'Welcome, $name' : 'Dashboard Menu',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          email.isNotEmpty ? email : 'No email provided',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
             ),
+
             ListTile(
               title: const Text('Add Student'),
               leading: const Icon(Icons.person_add),

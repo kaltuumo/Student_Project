@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:student_project/features/pages/models/class_time_model.dart';
 import 'package:student_project/features/pages/repositories/class_time_repositories.dart';
 
@@ -16,8 +17,17 @@ class ClassTimeController extends GetxController {
   final isLoading = false.obs;
   final RxString selectedDay = ''.obs; // ✅ Used by radio buttons
 
-  final isStudentCreated = false.obs;
+  final isClassCreated = false.obs;
   String? selectedPostId; // For update operations
+
+  // String formatTime(String time24) {
+  //   try {
+  //     final time = DateFormat("HH:mm").parse(time24); // 24 saac
+  //     return DateFormat("h:mm a").format(time); // 12 saac AM/PM
+  //   } catch (e) {
+  //     return time24; // fallback haddii ay dhibaato dhacdo
+  //   }
+  // }
 
   @override
   void onInit() {
@@ -79,7 +89,7 @@ class ClassTimeController extends GetxController {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        isStudentCreated(true);
+        isClassCreated(true);
         await fetchAllClassTime();
       } else {
         Get.snackbar(
@@ -181,7 +191,7 @@ class ClassTimeController extends GetxController {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        isStudentCreated(true);
+        isClassCreated(true);
         await fetchAllClassTime();
       } else {
         Get.snackbar(

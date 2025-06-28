@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_project/features/auth/controllers/auth_controller.dart';
-import 'package:student_project/features/pages/screens/dashboard/dashboard.dart';
+import 'package:student_project/features/pages/screens/student/get_student.dart';
 import 'package:student_project/shared/widgets/custom_buttons.dart';
 import 'package:student_project/utils/constant/colors.dart';
 import 'package:student_project/utils/constant/images.dart';
@@ -131,7 +131,7 @@ class LoginAdmin extends StatelessWidget {
                               await SharedPreferences.getInstance();
                           String? token = prefs.getString('token');
                           if (token != null) {
-                            Get.offAll(() => Dashboard());
+                            Get.offAll(() => GetStudent());
                           }
                         },
                       ),

@@ -34,6 +34,7 @@ class ClassTimeModel {
       'subject': subject,
       'teacher': teacher,
       'room': room,
+      'day': day,
       'startTime': startTime,
       'endTime': endTime,
     };

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -27,6 +29,8 @@ class AuthController extends GetxController {
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
+  var fullname = ''.obs; // Add this to hold the fullname
+  var email = ''.obs; // Add this to hold the email
 
   var isLoading = false.obs;
 
@@ -76,11 +80,16 @@ class AuthController extends GetxController {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('userId', userData['id']);
         print('User ID saved to SharedPreferences: ${userData['id']}');
+        fullname.value = userData['fullname'];
+        await prefs.setString('fullname', userData['fullname']);
+        email.value = userData['email'];
+        await prefs.setString('email', userData['email']);
 
         // Set the user ID in the controller
         currentUserId.value = userData['id'];
+        fullname.value = userData['fullname'];
+        email.value = userData['email'];
 
-        // Optionally, you can navigate to another page after successful login
         Get.offAll(() => Dashboard());
       } else {
         Get.snackbar('Error', 'Invalid login response');
@@ -93,14 +102,39 @@ class AuthController extends GetxController {
     }
   }
 
-  void loadStoredUserId() async {
+  Future<void> loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
-    if (userId != null && userId.isNotEmpty) {
-      currentUserId.value = userId;
-      print('User ID loaded from SharedPreferences: $userId');
+    String? token = prefs.getString('token');
+    String? userEmail = prefs.getString('email');
+
+    if (token != null && userEmail != null) {
+      try {
+        final response = await ApiClient.getAdminProfile(token);
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          final users = responseData['data'] as List;
+
+          final currentUser = users.firstWhere(
+            (user) => user['email'] == userEmail,
+            orElse: () => null,
+          );
+
+          if (currentUser != null) {
+            fullname.value = currentUser['fullname'] ?? 'Unknown';
+            email.value =
+                currentUser['email'] ??
+                'unknown@example.com'; // ✅ email sidoo kale
+          } else {
+            Get.snackbar('Error', 'User not found');
+          }
+        } else {
+          Get.snackbar('Error', 'Failed to load user data');
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'Error: $e');
+      }
     } else {
-      print('❌ No user ID found in SharedPreferences.');
+      Get.snackbar('Error', 'Login data missing. Please login again.');
     }
   }
 
@@ -110,5 +144,6 @@ class AuthController extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('userId');
     currentUserId.value = '';
+    fullname.value = ''; // ✅
   }
 }

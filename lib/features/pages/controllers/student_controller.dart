@@ -94,9 +94,9 @@ class StudentController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Error',
+        'Error occurred: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
-        'Error occurred: $e',
       );
     } finally {
       isLoading(false);

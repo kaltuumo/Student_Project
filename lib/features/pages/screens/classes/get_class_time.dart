@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:student_project/features/auth/controllers/auth_controller.dart';
 import 'package:student_project/features/pages/controllers/class_time_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
@@ -9,8 +11,8 @@ import 'package:student_project/features/pages/screens/payments/get_pending.dart
 import 'package:student_project/features/pages/screens/student/add_student.dart';
 import 'package:student_project/features/pages/screens/student/get_student.dart';
 import 'package:student_project/features/pages/screens/student/student_report.dart';
-import 'package:student_project/features/pages/screens/student/update_student.dart';
 import 'package:student_project/utils/constant/colors.dart';
+import 'package:student_project/utils/constant/sizes.dart';
 
 class GetClassTime extends StatefulWidget {
   const GetClassTime({super.key});
@@ -21,7 +23,7 @@ class GetClassTime extends StatefulWidget {
 
 class _GetClassTimeState extends State<GetClassTime> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final AuthController authController = Get.find<AuthController>();
   final ClassTimeController classTimeController = Get.put(
     ClassTimeController(),
   );
@@ -57,12 +59,56 @@ class _GetClassTimeState extends State<GetClassTime> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                'Dashboard Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
+              child: Obx(() {
+                final String name = authController.fullname.value;
+                final String email = authController.email.value;
+                final String initial =
+                    name.isNotEmpty
+                        ? name[0].toUpperCase()
+                        : '?'; // xarafka 1aad
+
+                return Row(
+                  children: [
+                    // CircleAvatar with first letter
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      radius: 20,
+                      child: Text(
+                        initial,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          name.isNotEmpty ? 'Welcome, $name' : 'Dashboard Menu',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          email.isNotEmpty ? email : 'No email provided',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
             ),
             ListTile(
               title: const Text('Add Student'),
@@ -502,6 +548,7 @@ class _GetClassTimeState extends State<GetClassTime> {
                 ),
 
                 const SizedBox(height: 70),
+
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                   decoration: BoxDecoration(
@@ -511,13 +558,41 @@ class _GetClassTimeState extends State<GetClassTime> {
                   ),
                   child: TextFormField(
                     controller: classTimeController.startTimeController,
+                    readOnly: true,
+                    onTap: () async {
+                      TimeOfDay? pickedTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+                      if (pickedTime != null) {
+                        final now = DateTime.now();
+                        final dateTime = DateTime(
+                          now.year,
+                          now.month,
+                          now.day,
+                          pickedTime.hour,
+                          pickedTime.minute,
+                        );
+
+                        // ✅ Use this for clear AM/PM formatting
+                        final formattedTime = DateFormat(
+                          'h:mm a',
+                          'en_US',
+                        ).format(dateTime);
+
+                        classTimeController.startTimeController.text =
+                            formattedTime;
+                      }
+                    },
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Enter Start Time',
+                      hintText: 'Select Start Time (AM/PM)',
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 70),
+
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                   decoration: BoxDecoration(
@@ -527,12 +602,39 @@ class _GetClassTimeState extends State<GetClassTime> {
                   ),
                   child: TextFormField(
                     controller: classTimeController.endTimeController,
+                    readOnly: true,
+                    onTap: () async {
+                      TimeOfDay? pickedTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+                      if (pickedTime != null) {
+                        final now = DateTime.now();
+                        final dateTime = DateTime(
+                          now.year,
+                          now.month,
+                          now.day,
+                          pickedTime.hour,
+                          pickedTime.minute,
+                        );
+
+                        // ✅ Use this for clear AM/PM formatting
+                        final formattedTime = DateFormat(
+                          'h:mm a',
+                          'en_US',
+                        ).format(dateTime);
+
+                        classTimeController.endTimeController.text =
+                            formattedTime;
+                      }
+                    },
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Enter End Time',
+                      hintText: 'Select End Time (AM/PM)',
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 70),
 
                 ElevatedButton.icon(

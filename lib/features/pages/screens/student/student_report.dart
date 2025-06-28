@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:student_project/features/auth/controllers/auth_controller.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/controllers/student_report_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
@@ -9,6 +10,7 @@ import 'package:student_project/features/pages/screens/attendence/daily_attendan
 import 'package:student_project/features/pages/screens/payments/get_pending.dart';
 import 'package:student_project/features/pages/screens/student/add_student.dart';
 import 'package:student_project/features/pages/screens/student/get_student.dart';
+import 'package:student_project/utils/constant/colors.dart';
 import 'package:student_project/utils/constant/sizes.dart';
 
 class StudentReport extends StatefulWidget {
@@ -25,6 +27,7 @@ class _StudentReportState extends State<StudentReport> {
   );
 
   final StudentController studentController = Get.put(StudentController());
+  final AuthController authController = Get.find<AuthController>();
   bool isDarkMode = false;
 
   void toggleTheme() {
@@ -56,12 +59,56 @@ class _StudentReportState extends State<StudentReport> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                'Dashboard Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
+              child: Obx(() {
+                final String name = authController.fullname.value;
+                final String email = authController.email.value;
+                final String initial =
+                    name.isNotEmpty
+                        ? name[0].toUpperCase()
+                        : '?'; // xarafka 1aad
+
+                return Row(
+                  children: [
+                    // CircleAvatar with first letter
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      radius: 20,
+                      child: Text(
+                        initial,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          name.isNotEmpty ? 'Welcome, $name' : 'Dashboard Menu',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          email.isNotEmpty ? email : 'No email provided',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
             ),
             ListTile(
               title: const Text('Add Student'),

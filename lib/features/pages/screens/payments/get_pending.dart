@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:student_project/features/auth/controllers/auth_controller.dart';
 import 'package:student_project/features/pages/controllers/pending_controllers.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
@@ -20,6 +21,7 @@ class _GetPendingState extends State<GetPending> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final PendingControllers pendingControllers = Get.put(PendingControllers());
   final StudentController studentController = Get.put(StudentController());
+  final AuthController authController = Get.find<AuthController>();
   bool isDarkMode = false;
 
   void toggleTheme() {
@@ -58,12 +60,56 @@ class _GetPendingState extends State<GetPending> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                'Dashboard Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
+              child: Obx(() {
+                final String name = authController.fullname.value;
+                final String email = authController.email.value;
+                final String initial =
+                    name.isNotEmpty
+                        ? name[0].toUpperCase()
+                        : '?'; // xarafka 1aad
+
+                return Row(
+                  children: [
+                    // CircleAvatar with first letter
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      radius: 20,
+                      child: Text(
+                        initial,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          name.isNotEmpty ? 'Welcome, $name' : 'Dashboard Menu',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          email.isNotEmpty ? email : 'No email provided',
+                          style: const TextStyle(
+                            color: AppColors.blackColor,
+                            fontSize: AppSizes.md,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
             ),
             ListTile(
               title: const Text('Add Student'),
