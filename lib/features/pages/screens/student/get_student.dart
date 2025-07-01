@@ -220,71 +220,68 @@ class _GetStudentState extends State<GetStudent> {
                     final student = studentController.posts[index];
                     return Card(
                       elevation: 2,
-                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      // margin: const EdgeInsets.symmetric(vertical: 8),
                       child: ListTile(
-                        title: Text(
-                          student.fullname,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              student.fullname,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const Icon(Icons.more_vert),
+                          ],
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Registered: ${student.createdDate}"),
-                                PopupMenuButton<String>(
-                                  onSelected: (value) {
-                                    if (value == 'update') {
-                                      studentController.setSelectedPostId(
-                                        student.id!,
-                                      );
-                                      Get.to(
-                                        () => UpdateStudent(student: student),
-                                      );
-                                    } else if (value == 'delete') {
-                                      _showDeleteConfirmationDialog(context);
-                                      studentController.selectedPostId =
-                                          student.id;
-                                    }
-                                  },
-                                  itemBuilder:
-                                      (BuildContext context) => [
-                                        const PopupMenuItem(
-                                          value: 'update',
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.edit,
-                                                color: Colors.blue,
-                                              ), // Icon for Update
-                                              SizedBox(
-                                                width: 8,
-                                              ), // Space between icon and text
-                                              Text('Update'),
-                                            ],
-                                          ),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 'delete',
+                            Text("Registered: ${student.createdDate}"),
+                            PopupMenuButton<String>(
+                              onSelected: (value) {
+                                if (value == 'update') {
+                                  studentController.setSelectedPostId(
+                                    student.id!,
+                                  );
+                                  Get.to(() => UpdateStudent(student: student));
+                                } else if (value == 'delete') {
+                                  _showDeleteConfirmationDialog(context);
+                                  studentController.selectedPostId = student.id;
+                                }
+                              },
+                              itemBuilder:
+                                  (BuildContext context) => [
+                                    const PopupMenuItem(
+                                      value: 'update',
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.edit,
+                                            color: Colors.blue,
+                                          ), // Icon for Update
+                                          SizedBox(
+                                            width: 8,
+                                          ), // Space between icon and text
+                                          Text('Update'),
+                                        ],
+                                      ),
+                                    ),
+                                    const PopupMenuItem(
+                                      value: 'delete',
 
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ), // Icon for Update
-                                              SizedBox(
-                                                width: 8,
-                                              ), // Space between icon and text
-                                              Text('Delete'),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                  icon: const Icon(Icons.more_vert),
-                                ),
-                              ],
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ), // Icon for Update
+                                          SizedBox(
+                                            width: 8,
+                                          ), // Space between icon and text
+                                          Text('Delete'),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                             ),
                             Divider(thickness: 2, indent: 1, endIndent: 1),
                             SizedBox(height: 10),

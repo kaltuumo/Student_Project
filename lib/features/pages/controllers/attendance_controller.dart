@@ -1,72 +1,62 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:student_project/features/pages/models/attendence_model.dart';
 import 'package:student_project/features/pages/models/student_model.dart';
-import 'package:student_project/features/services/api_cilent.dart';
+import 'package:student_project/features/pages/repositories/student_repositories.dart';
 
 class AttendanceController extends GetxController {
-  var students = <StudentModel>[].obs;
-  var attendanceMap = <String, String>{}.obs;
-  final isLoading = false.obs;
+  var classLevels =
+      [
+        'Form One',
+        'Form Two',
+        'Form Three',
+        'Form Four',
+        '8th Grade',
+        '7th Grade',
+        '6th Grade',
+        '5th Grade',
+        '4th Grade',
+        '3rd Grade',
+        '2nd Grade',
+        '1st Grade',
+      ].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchStudents();
-  }
+  var selectedClassLevel = ''.obs; // Track selected class level
+  var studentsInClass = <String>[].obs; // List of full names of students
 
-  // Fetch students for attendance
-  void fetchStudents() async {
+  final StudentRepositories _studentRepository = StudentRepositories();
+
+  Future<void> fetchStudentsInClass() async {
     try {
-      isLoading.value = true;
-      final data = await ApiClient.getStudents();
-      students.value = data.map((e) => StudentModel.fromJson(e)).toList();
-    } catch (e) {
-      Get.snackbar("Error", "Failed to load students: $e");
-    } finally {
-      isLoading.value = false;
-    }
-  }
+      final data =
+          await _studentRepository.fetchStudents(); // Fetch all students
+      if (selectedClassLevel.value.isNotEmpty) {
+        List<StudentModel> filteredStudents =
+            data.where((student) {
+              return student.classLevel == selectedClassLevel.value;
+            }).toList();
 
-  // Set attendance status for each student
-  void setStatus(String studentId, String status) {
-    attendanceMap[studentId] = status;
-  }
-
-  // Submit attendance to API
-  void submitAttendance() async {
-    final date = DateFormat(
-      'yyyy-MM-dd',
-    ).format(DateTime.now()); // Get today's date
-
-    try {
-      for (var student in students) {
-        final status =
-            attendanceMap[student.id] ?? 'Absent'; // Default status is 'Absent'
-
-        final attendance = AttendanceModel(
-          studentId: student.id!, // Using student's id
-          date: date,
-          status: status,
-        );
-
-        final success = await ApiClient.markAttendance(
-          attendance,
-        ); // Send attendance
-
-        if (!success) {
-          Get.snackbar("Error", "Failed for ${student.fullname}");
-          return;
-        }
+        // Combine fullname and phone into one string
+        studentsInClass.value =
+            filteredStudents
+                .map(
+                  (student) => '${student.fullname} - ${student.phone}',
+                ) // Concatenate fullname and phone
+                .toList();
+      } else {
+        studentsInClass.value =
+            data
+                .map(
+                  (student) => '${student.fullname} - ${student.phone}',
+                ) // Concatenate fullname and phone
+                .toList();
       }
-
-      Get.snackbar("Success", "Attendance marked for $date");
     } catch (e) {
-      Get.snackbar("Error", "Exception: $e");
+      Get.snackbar(
+        "Error",
+        'Fetch failed: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
-  }
-
-  void exportToPdf() {
-    Get.snackbar("Export", "PDF export feature to be implemented");
   }
 }

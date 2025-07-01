@@ -16,7 +16,7 @@ class ClassDropdownController extends GetxController {
     } else if (value == 'Primary Morning') {
       classLevels.value = ['8th Grade', '7th Grade', '6th Grade', '5th Grade'];
     } else if (value == 'Primary AfterNoon') {
-      classLevels.value = ['4th Grade', '3th Grade', '3th Grade', '1rd Grade'];
+      classLevels.value = ['4th Grade', '3rd Grade', '2nd Grade', '1st Grade'];
     }
   }
 
