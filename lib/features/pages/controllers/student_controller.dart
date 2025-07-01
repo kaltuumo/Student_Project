@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:student_project/features/pages/models/student_model.dart';
 import 'package:student_project/features/pages/repositories/student_repositories.dart';
@@ -11,8 +10,14 @@ class StudentController extends GetxController {
   final requiredController = TextEditingController();
   final paidController = TextEditingController();
   final phoneController = TextEditingController();
-  final RxString selectedGender = ''.obs; // ✅ Used by radio buttons
-  final RxString selectedEducation = ''.obs; // ✅ Used by radio buttons
+  final classStudentController = TextEditingController();
+  final classLevelController = TextEditingController();
+
+  final RxString selectedGender = ''.obs;
+  final RxString selectedEducation = ''.obs;
+
+  final RxString selectedClassStudent = ''.obs;
+  final RxString selectedClassLevel = ''.obs;
 
   final RxList<StudentModel> posts = <StudentModel>[].obs;
   final StudentRepositories _studentRepository = StudentRepositories();
@@ -40,10 +45,12 @@ class StudentController extends GetxController {
             selectedEducation.value != 'Secondary') ||
         requiredController.text.isEmpty ||
         paidController.text.isEmpty ||
-        phoneController.text.isEmpty) {
+        phoneController.text.isEmpty ||
+        selectedClassStudent.value.isEmpty ||
+        selectedClassLevel.value.isEmpty) {
       Get.snackbar(
         'Foomka Khaldan',
-        'Fadlan buuxi dhammaan meelaha, gaar ahaan dooro jinsiga (Male ama Female)',
+        'Fadlan buuxi dhammaan meelaha, gaar ahaan dooro jinsiga (Male ama Female), class iyo class level',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -62,6 +69,8 @@ class StudentController extends GetxController {
         required: requiredAmount, // ✅ Convert string to double
         paid: paidAmount,
         phone: phoneController.text.trim(),
+        classStudent: selectedClassStudent.value.trim(),
+        classLevel: selectedClassLevel.value.trim(),
       );
 
       bool success = await _studentRepository.createStudent(post);
@@ -75,6 +84,8 @@ class StudentController extends GetxController {
         phoneController.clear();
         selectedGender.value = ''; //
         selectedEducation.value = ''; // Reset selected education
+        selectedClassStudent.value = '';
+        selectedClassLevel.value = '';
         Get.snackbar(
           'Success',
           'Student created',
@@ -195,6 +206,15 @@ class StudentController extends GetxController {
       return;
     }
 
+    if (selectedClassStudent.value.isEmpty) {
+      Get.snackbar('Error', 'ClassStudent is required');
+      return;
+    }
+    if (selectedClassLevel.value.isEmpty) {
+      Get.snackbar('Error', 'ClassLevel is required');
+      return;
+    }
+
     try {
       isLoading(true);
       double requiredAmount = double.parse(requiredController.text.trim());
@@ -207,6 +227,8 @@ class StudentController extends GetxController {
         required: requiredAmount,
         paid: paidAmount,
         phone: phoneController.text.trim(),
+        classStudent: selectedClassStudent.value.trim(),
+        classLevel: selectedClassLevel.value.trim(),
       );
 
       bool success = await _studentRepository.updateStudent(
@@ -223,6 +245,8 @@ class StudentController extends GetxController {
         phoneController.clear();
         selectedGender.value = ''; // Reset gender
         selectedEducation.value = ''; // Reset education
+        selectedClassStudent.value = '';
+        selectedClassLevel.value = '';
         Get.snackbar(
           'Updated',
           'Student updated',

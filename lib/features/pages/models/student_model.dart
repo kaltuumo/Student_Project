@@ -6,6 +6,8 @@ class StudentModel {
   final double required;
   final double paid;
   final String phone;
+  final String? classStudent;
+  final String? classLevel;
   final String? createdDate;
   final String? createdTime;
   final String? updateDate;
@@ -14,8 +16,7 @@ class StudentModel {
   double get remaining => required - paid;
 
   // Determine if the student has "Approved" or "Pending" status
-  String get status =>
-      (remaining != null && remaining == 0) ? 'Approved' : 'Pending';
+  String get status => (remaining == 0) ? 'Approved' : 'Pending';
 
   // Constructor for reading full student info from the backend
   StudentModel({
@@ -26,6 +27,8 @@ class StudentModel {
     required this.required,
     required this.paid,
     required this.phone,
+    this.classStudent,
+    this.classLevel,
     this.createdDate,
     this.createdTime,
     this.updateDate,
@@ -40,6 +43,8 @@ class StudentModel {
     required this.required,
     required this.paid,
     required this.phone,
+    required this.classStudent,
+    required this.classLevel,
   }) : id = null,
        createdDate = null,
        createdTime = null,
@@ -55,8 +60,9 @@ class StudentModel {
       education: json['education'],
       required: (json['required'] as num).toDouble(),
       paid: (json['paid'] as num).toDouble(),
-
       phone: json['phone'],
+      classStudent: json['classStudent'],
+      classLevel: json['classLevel'],
       createdDate: json['createdDate'],
       createdTime: json['createdTime'],
       updateDate: json['updateDate'],
@@ -73,6 +79,8 @@ class StudentModel {
       'required': required,
       'paid': paid,
       'phone': phone,
+      'classStudent': classStudent,
+      'classLevel': classLevel,
     };
   }
 }

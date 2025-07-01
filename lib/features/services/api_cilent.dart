@@ -127,7 +127,7 @@ class ApiClient {
         body: jsonEncode(post.toJson()),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       } else {
         final responseBody = jsonDecode(response.body);
@@ -162,7 +162,7 @@ class ApiClient {
         body: jsonEncode(post.toJson()),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       } else {
         final responseBody = jsonDecode(response.body);

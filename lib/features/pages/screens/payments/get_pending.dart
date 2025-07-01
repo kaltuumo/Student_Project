@@ -177,7 +177,7 @@ class _GetPendingState extends State<GetPending> {
               double totalPendingAmount = 0.0;
               int totalPendingCount = 0;
               for (var student in pendingControllers.posts) {
-                totalPendingAmount += student.remaining ?? 0.0;
+                totalPendingAmount += student.remaining;
                 totalPendingCount++; // Count the student
               }
 

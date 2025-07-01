@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:student_project/features/auth/controllers/auth_controller.dart';
+import 'package:student_project/features/pages/controllers/class_dropdown_controller.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/models/student_model.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
@@ -24,6 +25,7 @@ class _UpdateStudenttState extends State<UpdateStudent> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final StudentController studentController = Get.put(StudentController());
   final AuthController authController = Get.find<AuthController>();
+  final classController = Get.put(ClassDropdownController());
 
   bool isDarkMode = false;
 
@@ -54,6 +56,17 @@ class _UpdateStudenttState extends State<UpdateStudent> {
     studentController.paidController.text = widget.student.paid.toString();
     studentController.selectedGender.value = widget.student.gender;
     studentController.selectedEducation.value = widget.student.education;
+
+    // ✅ Set classStudent and update classLevels list
+    classController.selectedClassStudent.value = widget.student.classStudent!;
+    studentController.selectedClassStudent.value = widget.student.classStudent!;
+    classController.updateClassStudent(
+      widget.student.classStudent!,
+    ); // This populates classLevels
+
+    // ✅ Now you can safely assign classLevel
+    classController.selectedClassLevel.value = widget.student.classLevel!;
+    studentController.selectedClassLevel.value = widget.student.classLevel!;
   }
 
   @override
@@ -252,6 +265,12 @@ class _UpdateStudenttState extends State<UpdateStudent> {
           const SizedBox(height: 24),
           _buildLabel("Education Level"),
           _buildDropdown(),
+          const SizedBox(height: 24),
+          _buildLabel("Class Level"),
+          _buildDropdownClassStudent(),
+          const SizedBox(height: 24),
+          _buildLabel("Class Option"),
+          _buildDropdownClassLevel(),
 
           const SizedBox(height: 24),
           SizedBox(
@@ -331,6 +350,7 @@ class _UpdateStudenttState extends State<UpdateStudent> {
                   : null, // if the value is empty, keep it null
           hint: const Text('Select Education Level'),
           isExpanded: true,
+          underline: const SizedBox(),
           onChanged: (String? newValue) {
             studentController.selectedEducation.value = newValue!;
           },
@@ -341,6 +361,77 @@ class _UpdateStudenttState extends State<UpdateStudent> {
                   child: Text(value),
                 );
               }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownClassStudent() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Obx(
+        () => DropdownButtonFormField<String>(
+          value:
+              classController.selectedClassStudent.value.isEmpty
+                  ? null
+                  : classController.selectedClassStudent.value,
+          decoration: InputDecoration(
+            hintText:
+                'Class Time', // Yareynta balaca textfiledga lkn label wuu balaarina
+            border: InputBorder.none,
+          ),
+          items:
+              classController.classStudentList.map((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+          onChanged: (value) {
+            if (value != null) {
+              classController.updateClassStudent(value);
+              studentController.selectedClassStudent.value = value;
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownClassLevel() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Obx(
+        () => DropdownButtonFormField<String>(
+          value:
+              classController.selectedClassLevel.value.isEmpty
+                  ? null
+                  : classController.selectedClassLevel.value,
+          decoration: InputDecoration(
+            hintText: 'Class Level',
+            border: InputBorder.none,
+          ),
+          items:
+              classController.classLevels.map((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+          onChanged: (value) {
+            if (value != null) {
+              classController.updateClassLevel(value);
+              studentController.selectedClassLevel.value = value;
+            }
+          },
         ),
       ),
     );

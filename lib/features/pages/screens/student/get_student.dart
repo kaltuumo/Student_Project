@@ -174,7 +174,7 @@ class _GetStudentState extends State<GetStudent> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         child: Column(
           children: [
             // Search Box (optional)
@@ -393,6 +393,59 @@ class _GetStudentState extends State<GetStudent> {
                               ],
                             ),
                             SizedBox(height: 15),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  width: 125,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      100,
+                                      141,
+                                      101,
+                                    ).withOpacity(0.5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.school, size: 20),
+                                      SizedBox(width: 10),
+                                      Text("${student.education}"),
+                                    ],
+                                  ),
+                                ),
+
+                                SizedBox(width: 10),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  // width: 10,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color.fromARGB(
+                                      255,
+                                      100,
+                                      141,
+                                      101,
+                                    ).withOpacity(0.5),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.school, size: 20),
+                                      SizedBox(width: 10),
+                                      Text("${student.classStudent}"),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
                             Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 10,
@@ -412,7 +465,7 @@ class _GetStudentState extends State<GetStudent> {
                                 children: [
                                   Icon(Icons.school, size: 20),
                                   SizedBox(width: 10),
-                                  Text("${student.education}"),
+                                  Text("${student.classLevel}"),
                                 ],
                               ),
                             ),
