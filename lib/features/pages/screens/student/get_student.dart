@@ -4,12 +4,9 @@ import 'package:student_project/features/auth/controllers/auth_controller.dart';
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
-import 'package:student_project/features/pages/screens/attendence/daily_attendance.dart';
-import 'package:student_project/features/pages/screens/classes/get_class_time.dart';
-import 'package:student_project/features/pages/screens/payments/get_pending.dart';
 import 'package:student_project/features/pages/screens/student/add_student.dart';
-import 'package:student_project/features/pages/screens/student/student_report.dart';
 import 'package:student_project/features/pages/screens/student/update_student.dart';
+import 'package:student_project/shared/widgets/custom_appbar.dart';
 import 'package:student_project/utils/constant/colors.dart';
 import 'package:student_project/utils/constant/sizes.dart';
 
@@ -48,17 +45,22 @@ class _GetStudentState extends State<GetStudent> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('All Students'),
-        actions: [
-          IconButton(
-            icon: Icon(isDarkMode ? Icons.brightness_7 : Icons.brightness_4),
-            onPressed: toggleTheme,
-          ),
-        ],
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
+      appBar: CustomAppBar(
+        title: "All Students",
+        onNotificationTap: () {
+          // Handle notification tap
+        },
       ),
       drawer: Drawer(
+        backgroundColor:
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
+
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -113,61 +115,78 @@ class _GetStudentState extends State<GetStudent> {
                 );
               }),
             ),
-
             ListTile(
               title: const Text('Add Student'),
               leading: const Icon(Icons.person_add),
-              onTap: () => Get.to(() => AddStudent()),
+              onTap: () {
+                Get.to(() => const AddStudent());
+                // Navigate to Add Student Screen
+              },
             ),
             ListTile(
               title: const Text('All Students'),
               leading: const Icon(Icons.list),
-              onTap: () => Get.to(() => const GetStudent()),
-            ),
-            Divider(thickness: 1, indent: 16, endIndent: 16),
-            ListTile(
-              title: const Text('Pending'),
-              leading: const Icon(Icons.pending),
               onTap: () {
-                Get.to(() => GetPending());
+                Get.to(() => GetStudent());
+                // Navigate to All Students Screen
               },
+            ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
+              indent: 16,
+              endIndent: 16,
             ),
             ListTile(
               title: const Text('Student Report'),
               leading: const Icon(Icons.report),
               onTap: () {
-                Get.to(() => StudentReport());
+                // Navigate to Student Report Screen
               },
             ),
             ListTile(
               title: const Text('Daily Attendance'),
               leading: const Icon(Icons.access_time),
               onTap: () {
-                Get.to(() => DailyAttendance());
+                // Navigate to Attendance Screen
               },
             ),
-            Divider(thickness: 1, indent: 16, endIndent: 16),
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
+              indent: 16,
+              endIndent: 16,
+            ),
             ListTile(
               title: const Text('Attendance Report'),
               leading: const Icon(Icons.picture_as_pdf),
-              onTap: () {},
+              onTap: () {
+                // Navigate to Attendance Report Screen
+              },
             ),
             ListTile(
               title: const Text('Admin Profile'),
               leading: const Icon(Icons.account_circle),
-              onTap: () => Get.to(() => AdminProfile()),
+              onTap: () {
+                Get.to(() => AdminProfile());
+              },
             ),
-            Divider(thickness: 1, indent: 16, endIndent: 16),
+            Divider(color: Colors.grey, thickness: 1, indent: 1, endIndent: 1),
             ListTile(
               title: const Text('Add New Admin'),
               leading: const Icon(Icons.admin_panel_settings),
-              onTap: () => Get.to(() => AddAdmin()),
+              onTap: () {
+                Get.to(
+                  () => const AddAdmin(),
+                ); // Replace with actual Add Admin Screen
+                // Navigate to Add New Admin Screen
+              },
             ),
             ListTile(
               title: const Text('Manage Class Time'),
               leading: const Icon(Icons.schedule),
               onTap: () {
-                Get.to(() => GetClassTime());
+                // Navigate to Manage Class Time Screen
               },
             ),
           ],
@@ -229,13 +248,6 @@ class _GetStudentState extends State<GetStudent> {
                               student.fullname,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            const Icon(Icons.more_vert),
-                          ],
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Registered: ${student.createdDate}"),
                             PopupMenuButton<String>(
                               onSelected: (value) {
                                 if (value == 'update') {
@@ -283,6 +295,13 @@ class _GetStudentState extends State<GetStudent> {
                                     ),
                                   ],
                             ),
+                          ],
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Registered: ${student.createdDate}"),
+
                             Divider(thickness: 2, indent: 1, endIndent: 1),
                             SizedBox(height: 10),
                             Row(

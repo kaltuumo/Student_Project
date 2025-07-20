@@ -6,8 +6,8 @@ import 'package:student_project/features/pages/controllers/class_dropdown_contro
 import 'package:student_project/features/pages/controllers/student_controller.dart';
 import 'package:student_project/features/pages/screens/admin/add_admin.dart';
 import 'package:student_project/features/pages/screens/admin/admin_profile.dart';
-import 'package:student_project/features/pages/screens/attendence/daily_attendance.dart';
 import 'package:student_project/features/pages/screens/student/get_student.dart';
+import 'package:student_project/shared/widgets/custom_appbar.dart';
 import 'package:student_project/utils/constant/colors.dart';
 import 'package:student_project/utils/constant/images.dart';
 import 'package:student_project/utils/constant/sizes.dart';
@@ -46,19 +46,24 @@ class _AddStudentState extends State<AddStudent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text('Add Student'),
-        actions: [
-          IconButton(
-            icon: Icon(isDarkMode ? Icons.brightness_7 : Icons.brightness_4),
-            onPressed: toggleTheme,
-          ),
-        ],
+      appBar: CustomAppBar(
+        title: "Add Student",
+        onNotificationTap: () {
+          // Handle notification tap
+        },
       ),
+
       drawer: Drawer(
+        backgroundColor:
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
+
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -146,8 +151,6 @@ class _AddStudentState extends State<AddStudent> {
               title: const Text('Daily Attendance'),
               leading: const Icon(Icons.access_time),
               onTap: () {
-                Get.to(() => DailyAttendance());
-
                 // Navigate to Attendance Screen
               },
             ),
@@ -171,12 +174,7 @@ class _AddStudentState extends State<AddStudent> {
                 Get.to(() => AdminProfile());
               },
             ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
-            ),
+            Divider(color: Colors.grey, thickness: 1, indent: 1, endIndent: 1),
             ListTile(
               title: const Text('Add New Admin'),
               leading: const Icon(Icons.admin_panel_settings),
@@ -197,7 +195,6 @@ class _AddStudentState extends State<AddStudent> {
           ],
         ),
       ),
-
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         children: [

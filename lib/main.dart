@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_project/features/auth/controllers/auth_controller.dart';
-import 'package:student_project/features/auth/screens/admin/login_admin.dart';
 import 'package:student_project/features/pages/screens/student/get_student.dart';
 
 void main() async {

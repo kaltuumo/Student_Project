@@ -19,27 +19,59 @@ class LoginAdmin extends StatelessWidget {
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 90),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(AppImages.appLogoFull, width: 170, height: 170),
+                Row(
+                  children: [
+                    Image.asset(AppImages.appLogoFull, width: 130),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+                        Text(
+                          "Bahdo Primary",
+                          style: TextStyle(
+                            fontSize: AppSizes.xl,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        Text(
+                          "School School",
+                          style: TextStyle(
+                            fontSize: AppSizes.xl,
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                 SizedBox(height: 10),
-                const Text(
-                  'Welcome to Student Project',
-                  style: TextStyle(
-                    fontSize: AppSizes.xl,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Welcome To Student App',
+                      style: TextStyle(
+                        fontSize: AppSizes.xl,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Please Login To See App Menu',
+                      style: TextStyle(
+                        fontSize: AppSizes.md,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Please log in to continue',
-                  style: TextStyle(
-                    fontSize: AppSizes.md,
-                    color: Colors.black54,
-                  ),
-                ),
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -90,7 +122,11 @@ class LoginAdmin extends StatelessWidget {
                     GetBuilder<AuthController>(
                       builder: (controller) {
                         return TextFormField(
-                          controller: controller.passwordController,
+                          controller: authController.passwordController,
+                          obscureText:
+                              !authController
+                                  .isPasswordVisible
+                                  .value, // Toggle password visibility
                           decoration: InputDecoration(
                             hintText: 'Enter Password',
                             hintStyle: const TextStyle(color: Colors.grey),
@@ -111,6 +147,18 @@ class LoginAdmin extends StatelessWidget {
                               borderSide: const BorderSide(
                                 color: AppColors.primaryColor,
                               ),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                authController.isPasswordVisible.value
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: AppColors.primaryColor,
+                              ),
+                              onPressed: () {
+                                controller
+                                    .togglePasswordVisibility(); // Toggle visibility using controller
+                              },
                             ),
                           ),
                         );

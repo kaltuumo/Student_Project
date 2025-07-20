@@ -10,6 +10,7 @@ import 'package:student_project/features/pages/screens/admin/widget/profile_widg
 import 'package:student_project/features/pages/screens/student/add_student.dart';
 import 'package:student_project/features/pages/screens/student/get_student.dart';
 import 'package:student_project/features/services/api_cilent.dart';
+import 'package:student_project/shared/widgets/custom_appbar.dart';
 import 'package:student_project/utils/constant/colors.dart';
 import 'package:student_project/utils/constant/images.dart';
 import 'package:student_project/utils/constant/sizes.dart';
@@ -100,19 +101,24 @@ class _AdminProfileState extends State<AdminProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
 
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text('Admin Profile'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications, color: AppColors.primaryColor),
-            onPressed: () {},
-          ),
-        ],
+      appBar: CustomAppBar(
+        title: "Admin Profile",
+        onNotificationTap: () {
+          // Handle notification tap
+        },
       ),
       drawer: Drawer(
+        backgroundColor:
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white,
+
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -223,12 +229,7 @@ class _AdminProfileState extends State<AdminProfile> {
                 Get.to(() => AdminProfile());
               },
             ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
-            ),
+            Divider(color: Colors.grey, thickness: 1, indent: 1, endIndent: 1),
             ListTile(
               title: const Text('Add New Admin'),
               leading: const Icon(Icons.admin_panel_settings),
@@ -251,6 +252,7 @@ class _AdminProfileState extends State<AdminProfile> {
       ),
       body: ListView(
         children: [
+          Divider(color: Colors.grey, thickness: 1, indent: 1, endIndent: 1),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
             child: Column(
@@ -282,8 +284,11 @@ class _AdminProfileState extends State<AdminProfile> {
                   children: [
                     Text(
                       isDarkMode ? "Dark Mode" : "Light Mode",
-                      style: const TextStyle(
-                        color: Colors.black,
+                      style: TextStyle(
+                        color:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.whiteColor
+                                : AppColors.blackColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -301,8 +306,8 @@ class _AdminProfileState extends State<AdminProfile> {
                               Get.changeTheme(ThemeData.light());
                             }
                           },
-                          activeColor: Colors.green,
-                          inactiveThumbColor: Colors.red,
+                          activeColor: AppColors.primaryColor,
+                          inactiveThumbColor: AppColors.primaryColor,
                         ),
                       ],
                     ),

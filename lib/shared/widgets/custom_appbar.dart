@@ -1,46 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:student_project/utils/constant/colors.dart';
-import 'package:student_project/utils/constant/sizes.dart';
 
-class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final List<Widget>? actions;
-  final bool showMenu;
-  final VoidCallback? onMenuTap;
+  final VoidCallback? onNotificationTap;
 
-  const CustomAppbar({
-    super.key,
-    required this.title,
-    this.actions,
-    this.showMenu = false,
-    this.onMenuTap,
-  });
+  const CustomAppBar({super.key, required this.title, this.onNotificationTap});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
+      backgroundColor:
+          Theme.of(context).brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
+
       title: Text(
         title,
-        style: const TextStyle(
-          fontSize: AppSizes.xl,
-          color: AppColors.blackColor,
-        ),
+        style: TextStyle(color: isDark ? Colors.white : Colors.black),
       ),
-      centerTitle: true,
-      leading:
-          showMenu
-              ? IconButton(
-                icon: const Icon(Icons.menu, color: AppColors.blackColor),
-                onPressed: onMenuTap ?? () => Scaffold.of(context).openDrawer(),
-              )
-              : IconButton(
-                icon: const Icon(Icons.arrow_back, color: AppColors.blackColor),
-                onPressed: () => Get.back(),
-              ),
-      actions: actions,
-      backgroundColor: AppColors.whiteColor,
-      elevation: 0, // No shadow (no divider)
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.notifications,
+            color: isDark ? Colors.white : AppColors.primaryColor,
+          ),
+          onPressed: onNotificationTap,
+        ),
+      ],
     );
   }
 

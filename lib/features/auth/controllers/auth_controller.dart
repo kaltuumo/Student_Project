@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:student_project/features/pages/screens/dashboard/dashboard.dart';
 import 'package:student_project/features/services/api_cilent.dart';
 
 class AuthController extends GetxController {
   final currentUserId = ''.obs; // Si aad ugu kaydiso user ID login kadib
   var selectedGender = ''.obs;
+
+  var isPasswordVisible = false.obs;
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
+    update();
+  }
 
   @override
   void onInit() {

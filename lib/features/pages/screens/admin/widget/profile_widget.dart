@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_project/utils/constant/colors.dart';
 import 'package:student_project/utils/constant/sizes.dart';
 
 class ProfileWidget extends StatelessWidget {
@@ -23,6 +24,13 @@ class ProfileWidget extends StatelessWidget {
                 ? Colors.grey[800]
                 : Colors.grey[200],
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color:
+              Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.primaryColor
+                  : AppColors.primaryColor,
+          width: 1,
+        ),
       ),
       child: Row(
         children: [
