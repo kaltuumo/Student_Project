@@ -26,7 +26,7 @@ class LoginAdmin extends StatelessWidget {
                 Image.asset(AppImages.appLogoFull, width: 170, height: 170),
                 SizedBox(height: 10),
                 const Text(
-                  'Welcome to MaalPay',
+                  'Welcome to Student Project',
                   style: TextStyle(
                     fontSize: AppSizes.xl,
                     fontWeight: FontWeight.bold,

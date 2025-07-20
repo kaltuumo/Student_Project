@@ -107,8 +107,8 @@ class _AdminProfileState extends State<AdminProfile> {
         title: const Text('Admin Profile'),
         actions: [
           IconButton(
-            icon: Icon(isDarkMode ? Icons.brightness_7 : Icons.brightness_4),
-            onPressed: toggleTheme,
+            icon: Icon(Icons.notifications, color: AppColors.primaryColor),
+            onPressed: () {},
           ),
         ],
       ),
@@ -276,6 +276,39 @@ class _AdminProfileState extends State<AdminProfile> {
                 // User info
                 Text(fullname, style: TextStyle(fontSize: AppSizes.xl)),
                 Text(email, style: TextStyle(fontSize: AppSizes.lg)),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      isDarkMode ? "Dark Mode" : "Light Mode",
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Switch(
+                          value: isDarkMode,
+                          onChanged: (value) {
+                            setState(() {
+                              isDarkMode = value;
+                            });
+                            if (isDarkMode) {
+                              Get.changeTheme(ThemeData.dark());
+                            } else {
+                              Get.changeTheme(ThemeData.light());
+                            }
+                          },
+                          activeColor: Colors.green,
+                          inactiveThumbColor: Colors.red,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+
                 SizedBox(height: 24),
 
                 // Profile details

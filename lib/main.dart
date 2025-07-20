@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark(), // Dark theme
       themeMode: ThemeMode.light, //
       debugShowCheckedModeBanner: false,
-      home: token != null ? GetStudent() : LoginAdmin(),
+      // home: token != null ? GetStudent() : LoginAdmin(),
+      home: GetStudent(),
     );
   }
 }

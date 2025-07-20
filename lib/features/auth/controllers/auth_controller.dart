@@ -90,7 +90,7 @@ class AuthController extends GetxController {
         fullname.value = userData['fullname'];
         email.value = userData['email'];
 
-        Get.offAll(() => Dashboard());
+        // Get.offAll(() => Dashboard());
       } else {
         Get.snackbar('Error', 'Invalid login response');
       }

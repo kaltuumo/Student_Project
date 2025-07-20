@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
 
+/// Custom colors used in the application
 class AppColors {
-  static const Color primaryColor = Color.fromARGB(
-    255,
-    96,
-    156,
-    97,
-  ); // Soft Green
-  static const Color primaryLight = Color(0xFFC8E6C9); // Lighter Green
-  static const Color secondaryColor = Color(
-    0xFFB9F6CA,
-  ); // Very light secondary green
-  static const Color secondaryLight = Color(
-    0xFFE8F5E9,
-  ); // Even lighter secondary green
+  AppColors._(); // Prevents instantiation
 
-  static const Color backgroundColor = Color(0xFFF9F9F9); // Light background
-  static const Color textColor = Color(0xFF212121); // Standard text
-  static const Color accentColor = Color(0xFF00C853); // Green A700
-  static const Color errorColor = Color(0xFFD32F2F); // Red 700
+  // Basic Colors
+  static const Color primaryColor = Color(0xFF0E74B8);
+  static const Color accent = Color(0xFF8FC14A);
 
-  static const Color whiteColor = Colors.white;
-  static const Color blackColor = Colors.black;
-  static const Color buttonColor = Color(0xFF0E74B8);
+  // Text Colors
+  static const Color textWhite = Color(0xFFffffff);
 
-  static const Color lightPrimaryColor = Colors.blue;
-  static const Color darkPrimaryColor = Colors.blueGrey;
+  // Error & Success Colors
+  static const Color errorColor = Color(0xFFd32f2f);
+  static const Color success = Color(0xFF08A045);
+  static const Color warning = Color(0xFFf57c00);
+  // Dark Color
+  static const Color primaryDark = Color(0xFF084C7A);
 
-  static const Color lightBackground = Colors.white;
-  static const Color darkBackground = Colors.black;
-
-  static const Color lightText = Colors.black;
-  static const Color darkText = Colors.white;
+  // Neutral Shades
+  static const Color blackColor = Color(0xFF232323);
+  static const Color grey = Colors.grey;
+  static const Color whiteColor = Color(0xFFffffff);
 }
